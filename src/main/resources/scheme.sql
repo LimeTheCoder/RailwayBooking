@@ -10,7 +10,7 @@ CREATE TABLE Users (
   name VARCHAR(50) NOT NULL,
   surname VARCHAR(50) NOT NULL,
   phone VARCHAR(15),
-  role VARCHAR(15) NOT NULL DEFAULT 'USER',
+  role ENUM('USER', 'ADMIN') NOT NULL,
   password VARCHAR(60) NOT NULL,
   PRIMARY KEY (email))
   ENGINE = InnoDB
