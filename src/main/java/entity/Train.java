@@ -5,6 +5,13 @@ public class Train {
     private String serialNumber;
     private int capacity;
 
+    public Train() {}
+
+    public Train(String serialNumber, int capacity) {
+        this.serialNumber = serialNumber;
+        this.capacity = capacity;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }
