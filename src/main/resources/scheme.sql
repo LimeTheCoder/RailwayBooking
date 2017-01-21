@@ -61,7 +61,8 @@ CREATE TABLE Routes(
   CONSTRAINT train_fk 
   	FOREIGN KEY(train) 
   	REFERENCES Trains(serial_no)
-  	ON DELETE CASCADE)
+  	ON DELETE CASCADE
+  	ON UPDATE CASCADE)
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
@@ -75,7 +76,8 @@ CREATE TABLE Invoices(
   CONSTRAINT passenger_fk 
   	FOREIGN KEY(passenger) 
   	REFERENCES Users(email)
-  	ON DELETE CASCADE,
+  	ON DELETE CASCADE
+  	ON UPDATE CASCADE,
   CONSTRAINT route_fk 
   	FOREIGN KEY(route) 
   	REFERENCES Routes(id)

@@ -3,10 +3,11 @@ package dao.jdbc.mysql;
 
 import dao.TrainDao;
 import dao.exception.DaoException;
+import dao.util.converter.ReadConverter;
+import dao.util.converter.TrainReadConverter;
 import entity.Train;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,13 +24,16 @@ public class MySqlTrainDao implements TrainDao {
 
     private final static String WHERE_SERIAL_NUMBER = " WHERE serial_no = ?";
 
-    private final static String SERIAL_NUMBER_FIELD = "serial_no";
-    private final static String CAPACITY_FIELD = "capacity";
-
     private final Connection connection;
+    private final ReadConverter<Train> converter;
 
     public MySqlTrainDao(Connection connection) {
+        this(connection, new TrainReadConverter());
+    }
+
+    public MySqlTrainDao(Connection connection, ReadConverter<Train> converter) {
         this.connection = connection;
+        this.converter = converter;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class MySqlTrainDao implements TrainDao {
 
             statement.setString(1, serialNumber);
             try (ResultSet resultSet = statement.executeQuery()) {
-                List<Train> userList = parseResultSet(resultSet);
+                List<Train> userList = converter.convertToList(resultSet);
                 return Optional.ofNullable(userList.isEmpty() ? null : userList.get(0));
             }
         } catch (SQLException e) {
@@ -53,7 +57,7 @@ public class MySqlTrainDao implements TrainDao {
     public List<Train> findAll() {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL)) {
-            return parseResultSet(resultSet);
+            return converter.convertToList(resultSet);
 
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -109,24 +113,5 @@ public class MySqlTrainDao implements TrainDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-    }
-
-    /**
-     * Map data from ResultSet to list of Train objects
-     *
-     * @param resultSet ResultSet, that provides data
-     * @return fetched train objects
-     * @throws SQLException
-     */
-    private List<Train> parseResultSet(ResultSet resultSet) throws SQLException {
-        List<Train> trains = new ArrayList<>();
-
-        while (resultSet.next()) {
-            String serial = resultSet.getString(SERIAL_NUMBER_FIELD);
-            int capacity = resultSet.getInt(CAPACITY_FIELD);
-            trains.add(new Train(serial, capacity));
-        }
-
-        return trains;
     }
 }
