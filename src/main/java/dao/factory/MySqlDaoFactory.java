@@ -5,7 +5,7 @@ import dao.connection.DaoConnection;
 import dao.connection.MySqlConnection;
 import dao.exception.DaoException;
 import dao.jdbc.PooledDataSource;
-import dao.jdbc.mysql.MySqlTrainDao;
+import dao.jdbc.mysql.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -32,17 +32,17 @@ public class MySqlDaoFactory extends DaoFactory {
 
     @Override
     public InvoiceDao getInvoiceDao(DaoConnection connection) {
-        return null;
+        return new MySqlInvoiceDao(getSqlConnection(connection));
     }
 
     @Override
     public RouteDao getRouteDao(DaoConnection connection) {
-        return null;
+        return new MySqlRouteDao(getSqlConnection(connection));
     }
 
     @Override
     public StationDao getStationDao(DaoConnection connection) {
-        return null;
+        return new MySqlStationDao(getSqlConnection(connection));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MySqlDaoFactory extends DaoFactory {
 
     @Override
     public UserDao getUserDao(DaoConnection connection) {
-        return null;
+        return new MySqlUserDao(getSqlConnection(connection));
     }
 
     private Connection getSqlConnection(DaoConnection connection) {
