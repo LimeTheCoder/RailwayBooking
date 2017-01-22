@@ -4,9 +4,12 @@ package controller.command;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class HomeCommand implements Command {
+public class GetHomeCommand implements Command {
+    private final static String HOME_PAGE =
+            "/WEB-INF/views/index.jsp";
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return "/WEB-INF/views/index.jsp";
+        return HOME_PAGE;
     }
 }
