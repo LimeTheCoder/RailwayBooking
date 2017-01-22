@@ -11,11 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+/**
+ * Single handler for all kinds of requests coming to the application.
+ *
+ * @author Taras Sakharchuk
+ */
 public class FrontController extends HttpServlet {
 
-    private static final Logger logger = Logger
+    private final static Logger logger = Logger
             .getLogger(FrontController.class);
+    private final static String PREFIX = ".*/site";
+    private final static String REQUESTED_PATH = "Requested path: ";
 
     private CommandHolder commandHolder;
 
@@ -44,10 +50,13 @@ public class FrontController extends HttpServlet {
         Command command = commandHolder.getCommand(getPath(request),
                 getMethod(request));
 
-        logger.debug("Requested path: " + getPath(request));
+        logger.debug(REQUESTED_PATH + getPath(request));
+        logger.debug(request.getContextPath());
 
-        String view = command.execute(request, response);
-        request.getRequestDispatcher(view).forward(request, response);
+        String path = command.execute(request, response);
+        if(!path.equals(Command.REDIRECTED)) {
+            request.getRequestDispatcher(path).forward(request, response);
+        }
     }
 
     private Method getMethod(HttpServletRequest request) {
@@ -55,7 +64,6 @@ public class FrontController extends HttpServlet {
     }
 
     private String getPath(HttpServletRequest request) {
-        return request.getRequestURI()
-                .substring(request.getContextPath().length());
+        return request.getRequestURI().replaceAll(PREFIX, "");
     }
 }

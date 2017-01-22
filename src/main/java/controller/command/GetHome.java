@@ -1,15 +1,19 @@
 package controller.command;
 
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-public class GetHomeCommand implements Command {
-    private final static String HOME_PAGE =
-            "/WEB-INF/views/index.jsp";
+import static controller.constants.PathsHolder.HOME_VIEW;
+import static controller.constants.PathsHolder.VIEWS_PATH;
+
+public class GetHome implements Command {
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return HOME_PAGE;
+    public String execute(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        return VIEWS_PATH + HOME_VIEW;
     }
 }

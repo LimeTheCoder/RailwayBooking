@@ -1,8 +1,11 @@
 package controller.command;
 
 
+import controller.constants.PathsHolder;
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class CommandHolder {
     public enum Method {
@@ -10,8 +13,6 @@ public class CommandHolder {
     }
 
     public final static String DELIMITER = ":";
-
-    public final static String HOME_PATH = "/home";
 
     private final Command DEFAULT_COMMAND = new DefaultCommand();
 
@@ -22,7 +23,8 @@ public class CommandHolder {
     }
 
     private void init() {
-        commands.put(buildKey(HOME_PATH, Method.GET), new HomeCommand());
+        commands.put(buildKey(PathsHolder.HOME_PATH, Method.GET),
+                new GetHome());
     }
 
     public Command getCommand(String path, Method method) {
