@@ -39,6 +39,8 @@ public class MySqlInvoiceDao implements InvoiceDao {
             "UPDATE Invoices SET passenger = ?, route = ? ";
 
     private final static String WHERE_ID = " WHERE id = ?";
+    private final static String WHERE_PASSENGER_ID = " WHERE passenger = ?";
+    private final static String WHERE_ROUTE_ID = " WHERE route = ?";
 
     private final Connection connection;
     private final ReadConverter<Invoice> converter;
@@ -133,6 +135,29 @@ public class MySqlInvoiceDao implements InvoiceDao {
 
             statement.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Invoice> findAllByPassenger(Long passengerId) {
+        return findAllWithID(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerId);
+    }
+
+    @Override
+    public List<Invoice> findAllByRoute(Long routeId) {
+        return findAllWithID(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
+    }
+
+    private List<Invoice> findAllWithID(String query, Long id) {
+        Objects.requireNonNull(id);
+
+        try (PreparedStatement statement = connection
+                .prepareStatement(query)) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            return converter.convertToList(resultSet);
         } catch (SQLException e) {
             throw new DaoException(e);
         }

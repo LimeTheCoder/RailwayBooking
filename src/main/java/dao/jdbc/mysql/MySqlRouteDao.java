@@ -6,6 +6,7 @@ import dao.util.Util;
 import dao.util.converter.ReadConverter;
 import dao.util.converter.RouteReadConverter;
 import entity.Route;
+import entity.Station;
 
 import java.sql.*;
 import java.util.List;
@@ -37,6 +38,8 @@ public class MySqlRouteDao implements RouteDao {
                     "train = ?, price = ? ";
 
     private final static String WHERE_ID = " WHERE id = ?";
+    private final static String WHERE_DEP_AND_DEST_STATION_ID =
+            " WHERE departure_station = ? and destination_station = ?";
 
     private final Connection connection;
     private final ReadConverter<Route> converter;
@@ -91,16 +94,7 @@ public class MySqlRouteDao implements RouteDao {
         try (PreparedStatement statement = connection
                 .prepareStatement(SQL_INSERT)) {
 
-            statement.setLong(1, route.getDeparture().getId());
-            statement.setLong(2, route.getDestination().getId());
-            statement.setTimestamp(3, Util.toTimestamp(
-                    route.getDepartureTime())
-            );
-            statement.setTimestamp(4, Util.toTimestamp(
-                    route.getDestinationTime())
-            );
-            statement.setString(5, route.getTrain().getSerialNumber());
-            statement.setInt(6, route.getPrice());
+            prepareStatement(statement, route);
 
             long id = statement.executeUpdate();
             route.setId(id);
@@ -132,21 +126,46 @@ public class MySqlRouteDao implements RouteDao {
         try (PreparedStatement statement = connection
                 .prepareStatement(SQL_UPDATE + WHERE_ID)) {
 
-            statement.setLong(1, route.getDeparture().getId());
-            statement.setLong(2, route.getDestination().getId());
-            statement.setTimestamp(3, Util.toTimestamp(
-                    route.getDepartureTime())
-            );
-            statement.setTimestamp(4, Util.toTimestamp(
-                    route.getDestinationTime())
-            );
-            statement.setString(5, route.getTrain().getSerialNumber());
-            statement.setInt(6, route.getPrice());
+            prepareStatement(statement, route);
             statement.setLong(7, route.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public List<Route> findByStations(Station from, Station to) {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+
+        try (PreparedStatement statement = connection
+                .prepareStatement(SQL_SELECT_ALL +
+                        WHERE_DEP_AND_DEST_STATION_ID)) {
+
+            statement.setLong(1, from.getId());
+            statement.setLong(2, to.getId());
+
+            ResultSet resultSet = statement.executeQuery();
+            return converter.convertToList(resultSet);
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    private void prepareStatement(PreparedStatement statement, Route route)
+            throws SQLException {
+        statement.setLong(1, route.getDeparture().getId());
+        statement.setLong(2, route.getDestination().getId());
+        statement.setTimestamp(3, Util.toTimestamp(
+                route.getDepartureTime())
+        );
+        statement.setTimestamp(4, Util.toTimestamp(
+                route.getDestinationTime())
+        );
+        statement.setString(5, route.getTrain().getSerialNumber());
+        statement.setInt(6, route.getPrice());
     }
 }

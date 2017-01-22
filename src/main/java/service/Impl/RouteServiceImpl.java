@@ -4,6 +4,7 @@ import dao.RouteDao;
 import dao.connection.DaoConnection;
 import dao.factory.DaoFactory;
 import entity.Route;
+import entity.Station;
 import service.RouteService;
 
 import java.util.List;
@@ -36,6 +37,14 @@ public class RouteServiceImpl implements RouteService {
         try(DaoConnection connection = daoFactory.getConnection()) {
             RouteDao routeDao = daoFactory.getRouteDao(connection);
             return routeDao.findAll();
+        }
+    }
+
+    @Override
+    public List<Route> findByStations(Station from, Station to) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            RouteDao routeDao = daoFactory.getRouteDao(connection);
+            return routeDao.findByStations(from, to);
         }
     }
 }
