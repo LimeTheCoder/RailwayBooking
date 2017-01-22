@@ -4,15 +4,14 @@
 <%@ page import="controller.constants.AttributesHolder" %>
 
 <html>
+
 <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
 <body>
 <fmt:setLocale value='${sessionScope[AttributesHolder.LOCALE]}' />
 <fmt:setBundle basename="messages"/>
 
-<div class="jumbotron">
-    <div class="container text-center">
-        <h1><fmt:message key="jumbotron.title" /></h1>
-    </div>
+<div class="alert alert-danger">
+    <strong><fmt:message key="error" /></strong> <fmt:message key="invalid.page" />
 </div>
 
 <jsp:include page="/WEB-INF/views/snippets/footer.jsp" />
