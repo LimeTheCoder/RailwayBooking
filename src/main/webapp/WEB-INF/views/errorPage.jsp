@@ -6,7 +6,9 @@
 <fmt:setBundle basename="i18n.messages"/>
 
 <html>
-    <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
+    <head>
+        <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
+    </head>
     <body>
         <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
 

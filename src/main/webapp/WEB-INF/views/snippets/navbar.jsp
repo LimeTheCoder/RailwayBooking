@@ -8,10 +8,12 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">RailWayBooking</a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/site/home">RailWayBooking</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#"><fmt:message key="home" /></a></li>
+            <li class="active">
+                <a href="${pageContext.request.contextPath}/site/home"><fmt:message key="home" /></a>
+            </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 ${sessionScope.locale.getLanguage().toUpperCase()}
@@ -25,7 +27,11 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><span class="glyphicon glyphicon-user"></span><fmt:message key="signup" /></a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span><fmt:message key="login" /></a></li>
+            <li>
+                <a href="${pageContext.request.contextPath}/site/login">
+                    <span class="glyphicon glyphicon-log-in"></span><fmt:message key="login" />
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

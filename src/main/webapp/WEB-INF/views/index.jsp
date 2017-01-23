@@ -6,8 +6,9 @@
 <fmt:setBundle basename="i18n.messages"/>
 
 <html>
-<jsp:include page="/WEB-INF/views/snippets/header.jsp" />
-
+<head>
+    <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
+</head>
 <body>
 <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
 
@@ -16,6 +17,8 @@
         <h1><fmt:message key="jumbotron.title" /></h1>
     </div>
 </div>
+
+<div class="well"><fmt:message key="site.description" /></div>
 
 <jsp:include page="/WEB-INF/views/snippets/footer.jsp" />
 </body>
