@@ -7,42 +7,56 @@
 <html>
     <head>
         <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
-        <style>
-            .container-style{
-                padding-top:20px;
-            }
-        </style>
+
+        <link rel="stylesheet" type="text/css"
+              href="${pageContext.request.contextPath}/resources/css/auth.css">
+        <link rel="stylesheet"
+              href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
 <body>
-<c:if test="${not empty requestScope.errorMsg}">
-    <div class="alert alert-danger">
-        <strong><fmt:message key="error" /></strong> <fmt:message key="${requestScope.errorMsg}" />
-    </div>
-</c:if>
-
-    <div class="container container-style">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><fmt:message key="login" /></h3>
-                    </div>
-                    <div class="panel-body">
-                        <form accept-charset="UTF-8" role="form" method="POST">
-                            <fieldset>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="<fmt:message key="email" />"
-                                           name="email" type="text" value="${requestScope.user.getEmail()}">
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="<fmt:message key="password" />"
-                                           name="password" type="password" value="">
-                                </div>
-                                <input class="btn btn-lg btn-success btn-block" type="submit" value="<fmt:message key="login" />">
-                            </fieldset>
-                        </form>
-                    </div>
+    <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
+    <c:if test="${not empty requestScope.errorMsg}">
+        <div class="alert alert-danger">
+            <strong><fmt:message key="error" /></strong> <fmt:message key="${requestScope.errorMsg}" />
+        </div>
+    </c:if>
+    <div class="container">
+        <div class="row main">
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    <h1 class="title"><fmt:message key="login" /></h1>
+                    <hr />
                 </div>
+            </div>
+            <div class="main-login main-center">
+                <form class="form-horizontal" accept-charset="UTF-8" role="form" method="post">
+
+                    <div class="form-group">
+                        <label for="email" class="cols-sm-2 control-label"><fmt:message key="email" /></label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                <input type="text" class="form-control" name="email" id="email"
+                                       placeholder="<fmt:message key="enter.email" />"
+                                       value="${requestScope.user.getEmail()}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="cols-sm-2 control-label"><fmt:message key="password" /></label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" name="password" id="password"
+                                       placeholder="<fmt:message key="enter.password" />"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input class="btn btn-primary btn-lg btn-block login-button" type="submit"
+                           value="<fmt:message key="login" />">
+                </form>
             </div>
         </div>
     </div>
