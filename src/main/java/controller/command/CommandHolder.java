@@ -1,8 +1,6 @@
 package controller.command;
 
 
-import controller.constants.PathsHolder;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +10,8 @@ public class CommandHolder {
         GET, POST
     }
 
-    public final static String DELIMITER = ":";
+    private final static String DELIMITER = ":";
+    private final static String HOME_PATH = "/home";
 
     private final Command DEFAULT_COMMAND = new DefaultCommand();
 
@@ -23,7 +22,7 @@ public class CommandHolder {
     }
 
     private void init() {
-        commands.put(buildKey(PathsHolder.HOME_PATH, Method.GET),
+        commands.put(buildKey(HOME_PATH, Method.GET),
                 new GetHome());
     }
 

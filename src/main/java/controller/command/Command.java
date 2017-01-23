@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public interface Command {
     String REDIRECTED = "REDIRECTED";
+    String VIEWS_PATH = "/WEB-INF/views";
 
     String execute(HttpServletRequest request,
                    HttpServletResponse response)

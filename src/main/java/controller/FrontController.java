@@ -3,6 +3,7 @@ package controller;
 import controller.command.Command;
 import controller.command.CommandHolder;
 import controller.command.CommandHolder.Method;
+import controller.i18n.SupportedLocale;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ public class FrontController extends HttpServlet {
             .getLogger(FrontController.class);
     private final static String PREFIX = ".*/site";
     private final static String REQUESTED_PATH = "Requested path: ";
+    private final static String SUPPORTED_LOCALES = "supportedLocales";
 
     private CommandHolder commandHolder;
 
@@ -29,6 +31,8 @@ public class FrontController extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         commandHolder = new CommandHolder();
+        getServletContext().setAttribute(SUPPORTED_LOCALES,
+                SupportedLocale.getSupportedLanguages());
     }
 
     @Override

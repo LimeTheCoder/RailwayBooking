@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static controller.constants.PathsHolder.HOME_VIEW;
-import static controller.constants.PathsHolder.VIEWS_PATH;
 
 public class GetHome implements Command {
+
+    private final static String HOME_VIEW = "/index.jsp";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

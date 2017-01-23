@@ -1,7 +1,9 @@
 package controller.i18n;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Encapsulates supported by application user locales
@@ -39,5 +41,11 @@ public enum SupportedLocale {
                 .filter(x -> x.getLanguage().equals(lang))
                 .findFirst()
                 .orElse(getDefault());
+    }
+
+    public static List<String> getSupportedLanguages() {
+        return Arrays.stream(SupportedLocale.values())
+                .map(x -> x.getLocale().getLanguage())
+                .collect(Collectors.toList());
     }
 }
