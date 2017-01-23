@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
  */
 public enum SupportedLocale {
     EN(new Locale("en", "EN")),
+    RU(new Locale("ru", "RU")),
     UK(new Locale("uk", "UA"));
 
     private final static Locale DEFAULT_LOCALE = EN.getLocale();
