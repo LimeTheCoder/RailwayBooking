@@ -38,4 +38,15 @@ public class UserServiceImpl implements UserService {
             return userDao.findAll();
         }
     }
+
+    @Override
+    public boolean isCredentialsValid(String email, String password) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            UserDao userDao = daoFactory.getUserDao(connection);
+            Optional<User> user = userDao.findOne(email);
+            return user
+                    .filter(u -> u.getPassword().equals(password))
+                    .isPresent();
+        }
+    }
 }

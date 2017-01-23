@@ -110,4 +110,11 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public boolean isAdmin() {
+        if(role != null && role == Role.ADMIN) {
+            return true;
+        }
+        return false;
+    }
 }

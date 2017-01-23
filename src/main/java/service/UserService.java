@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> findByEmail(String email);
     List<User> findAll();
+    boolean isCredentialsValid(String email, String password);
 }
