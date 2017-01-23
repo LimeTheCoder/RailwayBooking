@@ -29,6 +29,8 @@ public class CommandHolder {
                 new GetLogin());
         commands.put(buildKey(PagesPaths.LOGIN_PATH, Method.POST),
                 new PostLogin());
+        commands.put(buildKey(PagesPaths.SIGN_UP_PATH, Method.GET),
+                new GetSignUp());
     }
 
     public Command getCommand(String path, Method method) {

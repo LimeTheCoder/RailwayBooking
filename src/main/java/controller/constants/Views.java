@@ -6,4 +6,5 @@ public interface Views {
 
     String LOGIN_VIEW = VIEWS_PATH + "login.jsp";
     String HOME_VIEW = VIEWS_PATH + "index.jsp";
+    String SIGN_UP_VIEW = VIEWS_PATH + "signup.jsp";
 }

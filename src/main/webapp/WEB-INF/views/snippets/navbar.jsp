@@ -26,7 +26,11 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span><fmt:message key="signup" /></a></li>
+            <li>
+                <a href="${pageContext.request.contextPath}/site/signup">
+                    <span class="glyphicon glyphicon-user"></span><fmt:message key="signup" />
+                </a>
+            </li>
             <li>
                 <a href="${pageContext.request.contextPath}/site/login">
                     <span class="glyphicon glyphicon-log-in"></span><fmt:message key="login" />
