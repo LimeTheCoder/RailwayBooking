@@ -7,6 +7,7 @@ import controller.util.constants.PagesPaths;
 import controller.util.constants.Views;
 import controller.util.validator.*;
 import entity.User;
+import org.apache.log4j.Logger;
 import service.Impl.UserServiceImpl;
 import service.UserService;
 
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostSignUp implements Command {
+    private final static Logger logger = Logger
+            .getLogger(PostSignUp.class);
+
     private final static String EMAIL_PARAM = "email";
     private final static String PASSWORD_PARAM = "password";
     private final static String NAME_PARAM = "name";
@@ -28,6 +32,9 @@ public class PostSignUp implements Command {
     private final static String INVALID_NAME_KEY = "invalid.name";
     private final static String INVALID_SURNAME_KEY = "invalid.surname";
     private final static String USER_ALREADY_EXISTS = "user.exists";
+
+    private final static String ACCOUNT_CREATED =
+            "Created account for user with email - ";
 
     private final UserService userService = UserServiceImpl.getInstance();
 
@@ -54,6 +61,7 @@ public class PostSignUp implements Command {
         if(errors.isEmpty()) {
             userService.createUser(userDto);
             addUserToSessionAndRedirect(request, response);
+            logInfoAboutRegistration();
             return REDIRECTED;
         }
 
@@ -113,5 +121,10 @@ public class PostSignUp implements Command {
             throws IOException {
         request.getSession().setAttribute(Attributes.USER_ATTR, userDto);
         Util.redirectTo(request, response, PagesPaths.HOME_PATH);
+    }
+
+    private void logInfoAboutRegistration() {
+        logger.info(ACCOUNT_CREATED +
+                userDto.getEmail());
     }
 }

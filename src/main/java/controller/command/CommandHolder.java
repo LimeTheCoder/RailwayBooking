@@ -33,6 +33,8 @@ public class CommandHolder {
                 new GetSignUp());
         commands.put(buildKey(PagesPaths.SIGN_UP_PATH, Method.POST),
                 new PostSignUp());
+        commands.put(buildKey(PagesPaths.LOGOUT_PATH, Method.GET),
+                new Logout());
     }
 
     public Command getCommand(String path, Method method) {

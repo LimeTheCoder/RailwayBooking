@@ -26,16 +26,30 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="${pageContext.request.contextPath}/site/signup">
-                    <span class="glyphicon glyphicon-user"></span><fmt:message key="signup" />
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/site/login">
-                    <span class="glyphicon glyphicon-log-in"></span><fmt:message key="login" />
-                </a>
-            </li>
+            <c:if test="${empty sessionScope.user}">
+                <li>
+                    <a href="${pageContext.request.contextPath}/site/signup">
+                        <span class="glyphicon glyphicon-user"></span><fmt:message key="signup" />
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/site/login">
+                        <span class="glyphicon glyphicon-log-in"></span><fmt:message key="login" />
+                    </a>
+                </li>
+            </c:if>
+            <c:if test="${not empty sessionScope.user}">
+                <li>
+                    <a href="#">
+                        <fmt:message key="welcome" /><c:out value="${sessionScope.user.getName()}"/>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/site/logout">
+                        <span class="glyphicon glyphicon-log-out"></span><fmt:message key="logout" />
+                    </a>
+                </li>
+            </c:if>
         </ul>
     </div>
 </nav>
