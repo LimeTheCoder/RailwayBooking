@@ -1,7 +1,7 @@
 package controller.command;
 
 
-import controller.constants.PagesPaths;
+import controller.util.constants.PagesPaths;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +31,8 @@ public class CommandHolder {
                 new PostLogin());
         commands.put(buildKey(PagesPaths.SIGN_UP_PATH, Method.GET),
                 new GetSignUp());
+        commands.put(buildKey(PagesPaths.SIGN_UP_PATH, Method.POST),
+                new PostSignUp());
     }
 
     public Command getCommand(String path, Method method) {

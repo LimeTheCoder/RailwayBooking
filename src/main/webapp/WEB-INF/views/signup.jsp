@@ -17,9 +17,11 @@
 <body>
     <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
 
-    <c:if test="${not empty requestScope.errorMsg}">
+    <c:if test="${not empty requestScope.errors}">
         <div class="alert alert-danger">
-            <strong><fmt:message key="error" /></strong> <fmt:message key="${requestScope.errorMsg}" />
+            <c:forEach items="${requestScope.errors}" var="error" >
+                <strong><fmt:message key="error" /></strong> <fmt:message key="${error}" /><br>
+            </c:forEach>
         </div>
     </c:if>
 
@@ -40,7 +42,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="email" id="email"
-                                       placeholder="<fmt:message key="enter.email" />"/>
+                                       placeholder="<fmt:message key="enter.email" />"
+                                       value="${requestScope.user.getEmail()}" />
                             </div>
                         </div>
                     </div>
@@ -51,7 +54,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="name" id="name"
-                                       placeholder="<fmt:message key="enter.name" />"/>
+                                       placeholder="<fmt:message key="enter.name" />"
+                                       value="${requestScope.user.getName()}" />
                             </div>
                         </div>
                     </div>
@@ -62,18 +66,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="surname" id="surname"
-                                       placeholder="<fmt:message key="enter.surname" />"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="surname" class="cols-sm-2 control-label"><fmt:message key="city" /></label>
-                        <div class="cols-sm-10">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control" name="city" id="city"
-                                       placeholder="<fmt:message key="enter.city" />"/>
+                                       placeholder="<fmt:message key="enter.surname" />"
+                                       value="${requestScope.user.getSurname()}" />
                             </div>
                         </div>
                     </div>
@@ -84,7 +78,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-phone fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="phone" id="phone"
-                                       placeholder="<fmt:message key="enter.phone" />"/>
+                                       placeholder="<fmt:message key="enter.phone" />"
+                                       value="${requestScope.user.getPhone()}" />
                             </div>
                         </div>
                     </div>

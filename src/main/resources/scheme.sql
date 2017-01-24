@@ -9,7 +9,7 @@ CREATE TABLE Users (
   email VARCHAR(50) NOT NULL,
   name VARCHAR(50) NOT NULL,
   surname VARCHAR(50) NOT NULL,
-  phone VARCHAR(15),
+  phone VARCHAR(15) NOT NULL,
   role ENUM('USER', 'ADMIN') NOT NULL,
   password VARCHAR(60) NOT NULL,
   PRIMARY KEY (email))

@@ -5,9 +5,7 @@ import controller.util.Util;
 import controller.util.constants.Attributes;
 import controller.util.constants.PagesPaths;
 import controller.util.constants.Views;
-import controller.util.validator.EmailValidator;
-import controller.util.validator.PasswordValidator;
-import controller.util.validator.Validator;
+import controller.util.validator.*;
 import entity.User;
 import service.Impl.UserServiceImpl;
 import service.UserService;
@@ -18,49 +16,59 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Command that process login POST request.
- */
-public class PostLogin implements Command {
+public class PostSignUp implements Command {
     private final static String EMAIL_PARAM = "email";
     private final static String PASSWORD_PARAM = "password";
+    private final static String NAME_PARAM = "name";
+    private final static String SURNAME_PARAM = "surname";
+    private final static String PHONE_PARAM = "phone";
+
     private final static String ERRORS_LIST = "errors";
-    private final static String INVALID_CREDENTIALS = "invalid.credentials";
+    private final static String INVALID_NAME_KEY = "invalid.name";
+    private final static String INVALID_SURNAME_KEY = "invalid.surname";
+    private final static String USER_ALREADY_EXISTS = "user.exists";
 
     private final UserService userService = UserServiceImpl.getInstance();
+
     private Validator<String> emailValidator = new EmailValidator();
     private Validator<String> passwordValidator = new PasswordValidator();
+    private Validator<String> nameValidator = new NameValidator(INVALID_NAME_KEY);
+    private Validator<String> surnameValidator =
+            new NameValidator(INVALID_SURNAME_KEY);
+    private Validator<String> phoneValidator = new PhoneValidator();
+
     private User userDto;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         if(Util.isAlreadyLoggedIn(request.getSession())) {
             Util.redirectTo(request, response, PagesPaths.HOME_PATH);
             return REDIRECTED;
         }
 
         userDto = getDataFromRequest(request);
-
         List<String> errors = validateData();
 
         if(errors.isEmpty()) {
+            userService.createUser(userDto);
             addUserToSessionAndRedirect(request, response);
             return REDIRECTED;
         }
 
         addInvalidDataToRequest(request, errors);
 
-        return Views.LOGIN_VIEW;
+        return Views.SIGN_UP_VIEW;
     }
 
     private User getDataFromRequest(HttpServletRequest request) {
         return User.newBuilder()
                 .setEmail(request.getParameter(EMAIL_PARAM))
                 .setPassword(request.getParameter(PASSWORD_PARAM))
+                .setName(request.getParameter(NAME_PARAM))
+                .setSurname(request.getParameter(SURNAME_PARAM))
+                .setPhone(request.getParameter(PHONE_PARAM))
                 .build();
     }
 
@@ -75,28 +83,35 @@ public class PostLogin implements Command {
             errors.add(passwordValidator.getErrorKey());
         }
 
-        /* Check if entered password matches with user password only in case,
-            when email and password is valid
-        */
-        if(errors.isEmpty() && !userService.
-                isCredentialsValid(userDto.getEmail(), userDto.getPassword())) {
-            errors.add(INVALID_CREDENTIALS);
+        if(!phoneValidator.isValid(userDto.getPhone())) {
+            errors.add(phoneValidator.getErrorKey());
+        }
+
+        if(!nameValidator.isValid(userDto.getName())) {
+            errors.add(nameValidator.getErrorKey());
+        }
+
+        if(!surnameValidator.isValid(userDto.getSurname())) {
+            errors.add(surnameValidator.getErrorKey());
+        }
+
+        if(errors.isEmpty() && userService.isUserExists(userDto.getEmail())) {
+            errors.add(USER_ALREADY_EXISTS);
         }
 
         return errors;
-    }
-
-    private void addUserToSessionAndRedirect(HttpServletRequest request,
-                           HttpServletResponse response)
-            throws IOException {
-        Optional<User> user = userService.findByEmail(userDto.getEmail());
-        request.getSession().setAttribute(Attributes.USER_ATTR, user.get());
-        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
     }
 
     private void addInvalidDataToRequest(HttpServletRequest request,
                                          List<String> errors) {
         request.setAttribute(Attributes.USER_ATTR, userDto);
         request.setAttribute(ERRORS_LIST, errors);
+    }
+
+    private void addUserToSessionAndRedirect(HttpServletRequest request,
+                                             HttpServletResponse response)
+            throws IOException {
+        request.getSession().setAttribute(Attributes.USER_ATTR, userDto);
+        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
     }
 }
