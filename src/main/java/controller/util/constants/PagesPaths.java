@@ -1,4 +1,4 @@
-package controller.constants;
+package controller.util.constants;
 
 
 public interface PagesPaths {
