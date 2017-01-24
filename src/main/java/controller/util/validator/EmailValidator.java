@@ -1,43 +1,21 @@
 package controller.util.validator;
 
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class EmailValidator extends AbstractValidator<String>{
+public class EmailValidator extends RegexValidator {
     /**
      * Error message key, that will shown in case
      * when {@link #isError} is {@code true}
      */
     private final static String INVALID_EMAIL_KEY = "invalid.email";
 
+    private final static int MAX_LENGTH = 50;
+
     /**
-     * Regex and appropriate pattern.
-     * Used to perform validation of data.
+     * Regex used to perform validation of data.
      */
-    private static final String EMAIL_PATTERN = "^(.+\\@.+\\..+)$";
-    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    private static final String EMAIL_REGEX = "^(.+\\@.+\\..+)$";
 
     public EmailValidator() {
-        super(INVALID_EMAIL_KEY);
-    }
-
-    @Override
-    public boolean isValid(String email) {
-        resetErrorStatus();
-
-        if(email == null) {
-            setErrorStatus(true);
-            return false;
-        }
-
-        Matcher matcher = pattern.matcher(email);
-        boolean isMatches = matcher.matches();
-
-        if(!isMatches) {
-            setErrorStatus(true);
-        }
-
-        return isMatches;
+        super(EMAIL_REGEX, MAX_LENGTH, INVALID_EMAIL_KEY);
     }
 }
