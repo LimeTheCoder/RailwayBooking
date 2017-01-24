@@ -8,6 +8,7 @@ import entity.User;
 import service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
@@ -47,6 +48,28 @@ public class UserServiceImpl implements UserService {
             return user
                     .filter(u -> u.getPassword().equals(password))
                     .isPresent();
+        }
+    }
+
+    @Override
+    public boolean isUserExists(String email) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            UserDao userDao = daoFactory.getUserDao(connection);
+            return userDao.isExist(email);
+        }
+    }
+
+    @Override
+    public User createUser(User user) {
+        Objects.requireNonNull(user);
+
+        if(user.getRole() == null) {
+            user.setDefaultRole();
+        }
+
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            UserDao userDao = daoFactory.getUserDao(connection);
+            return userDao.insert(user);
         }
     }
 }

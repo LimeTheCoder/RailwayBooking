@@ -117,4 +117,8 @@ public class User {
         }
         return false;
     }
+
+    public void setDefaultRole() {
+        this.role = Role.ADMIN;
+    }
 }
