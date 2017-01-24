@@ -86,15 +86,20 @@ CREATE TABLE Invoices(
   DEFAULT CHARSET = utf8;
 
 INSERT INTO Users(email, password, name, surname, phone, role) 
-	VALUES('test@gmail.com', 'test', 'John', 'Smitt', '3805625172958', 'USER');
+	VALUES('test@gmail.com', '$2a$10$.jtJduq/M3xeePiuWUhytOCH4u6WYZiLKJnVBWNpPQa4SGHjck8bC',
+	'John', 'Smitt', '380562517296', 'USER');
 INSERT INTO Users(email, password, name, surname, phone, role) 
-	VALUES('test2@gmail.com', 'test2', 'Олег', 'Іванов', '38096283629218', 'USER');
+	VALUES('test2@gmail.com', '$2a$10$zaLSnXWi7ctehTyMk3VCTO6CUD4O0w4QxRh5nW99oHB/G5uu1TcmK',
+	'Олег', 'Іванов', '380944656193', 'USER');
 INSERT INTO Users(email, password, name, surname, phone, role) 
-	VALUES('test3@gmail.com', 'test3', 'Катерина', 'Михайленко', '38092283629218', 'USER');
+	VALUES('test3@gmail.com', '$2a$10$BcKQBUxTBgAypMzwykCWyeJhkWhxvF2ayDj.69ZNVsdFe5xQTwjoC',
+	'Катерина', 'Михайленко', '380922836292', 'USER');
 INSERT INTO Users(email, password, name, surname, phone, role) 
-	VALUES('test4@gmail.com', 'test4', 'Lesley', 'Cole', '38096258329335', 'USER');
-INSERT INTO Users(email, password, name, surname, role)
-	VALUES('admin@gmail.com', 'admin', 'Jessy', 'Williams','ADMIN');
+	VALUES('test4@gmail.com', '$2a$10$sCacNCYJsK5KA6n7OgJKgebPdPSFelRvN5Ybw5usfE4/aB5GQFZOq',
+	'Lesley', 'Cole', '380962583293', 'USER');
+INSERT INTO Users(email, password, name, surname, phone, role)
+	VALUES('admin@gmail.com', '$2a$10$Vm9Ol4p/GSW7KWM96ujHHuK1P0Fbo/mm6gKUSwLSuqMXGeSlpJUhO',
+	'Jessy', 'Williams', '380665536386', 'ADMIN');
 
 INSERT INTO Stations(name, city, country) VALUES('Південний', 'Київ', 'Україна');
 INSERT INTO Stations(name, city, country) VALUES('Центральний', 'Київ', 'Україна');

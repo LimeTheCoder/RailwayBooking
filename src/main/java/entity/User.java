@@ -119,6 +119,6 @@ public class User {
     }
 
     public void setDefaultRole() {
-        this.role = Role.ADMIN;
+        this.role = Role.USER;
     }
 }

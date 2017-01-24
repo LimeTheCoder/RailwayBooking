@@ -5,6 +5,7 @@ import dao.UserDao;
 import dao.connection.DaoConnection;
 import dao.factory.DaoFactory;
 import entity.User;
+import org.mindrot.jbcrypt.BCrypt;
 import service.UserService;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
             UserDao userDao = daoFactory.getUserDao(connection);
             Optional<User> user = userDao.findOne(email);
             return user
-                    .filter(u -> u.getPassword().equals(password))
+                    .filter(u -> BCrypt.checkpw(password, u.getPassword()))
                     .isPresent();
         }
     }
@@ -66,6 +67,9 @@ public class UserServiceImpl implements UserService {
         if(user.getRole() == null) {
             user.setDefaultRole();
         }
+
+        String hash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hash);
 
         try(DaoConnection connection = daoFactory.getConnection()) {
             UserDao userDao = daoFactory.getUserDao(connection);

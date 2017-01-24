@@ -4,7 +4,7 @@ package controller.util.validator;
 public class PasswordValidator extends AbstractValidator<String> {
     private final static String INVALID_PASSWORD = "invalid.password";
     private final static int PASSWORD_MIN_LENGTH = 6;
-    private final static int PASSWORD_MAX_LENGTH = 60;
+    private final static int PASSWORD_MAX_LENGTH = 50;
 
     public PasswordValidator() {
         super(INVALID_PASSWORD);
