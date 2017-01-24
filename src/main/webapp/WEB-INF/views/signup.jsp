@@ -27,7 +27,7 @@
         <div class="row main">
             <div class="panel-heading">
                 <div class="panel-title text-center">
-                    <h1 class="title"><fmt:message key="create.new.account" /></h1>
+                    <h2 class="title"><fmt:message key="create.new.account" /></h2>
                     <hr />
                 </div>
             </div>
@@ -74,6 +74,17 @@
                                 <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="city" id="city"
                                        placeholder="<fmt:message key="enter.city" />"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surname" class="cols-sm-2 control-label"><fmt:message key="phone" /></label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-phone fa" aria-hidden="true"></i></span>
+                                <input type="text" class="form-control" name="phone" id="phone"
+                                       placeholder="<fmt:message key="enter.phone" />"/>
                             </div>
                         </div>
                     </div>

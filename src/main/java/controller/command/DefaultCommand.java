@@ -1,7 +1,7 @@
 package controller.command;
 
 
-import controller.constants.PagesPaths;
+import controller.util.constants.PagesPaths;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

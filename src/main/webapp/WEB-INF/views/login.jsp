@@ -15,9 +15,11 @@
     </head>
 <body>
     <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
-    <c:if test="${not empty requestScope.errorMsg}">
+    <c:if test="${not empty requestScope.errors}">
         <div class="alert alert-danger">
-            <strong><fmt:message key="error" /></strong> <fmt:message key="${requestScope.errorMsg}" />
+            <c:forEach items="${requestScope.errors}" var="error" >
+                <strong><fmt:message key="error" /></strong> <fmt:message key="${error}" /><br>
+            </c:forEach>
         </div>
     </c:if>
     <div class="container">

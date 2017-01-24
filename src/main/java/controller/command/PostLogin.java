@@ -1,60 +1,60 @@
 package controller.command;
 
 
-import controller.constants.Attributes;
-import controller.constants.PagesPaths;
-import controller.constants.Views;
+import controller.util.Util;
+import controller.util.constants.Attributes;
+import controller.util.constants.PagesPaths;
+import controller.util.constants.Views;
+import controller.util.validator.EmailValidator;
+import controller.util.validator.PasswordValidator;
+import controller.util.validator.Validator;
 import entity.User;
-import org.apache.log4j.Logger;
 import service.Impl.UserServiceImpl;
 import service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * Command that process login POST request.
+ */
 public class PostLogin implements Command {
-    private final static Logger logger = Logger
-            .getLogger(PostLogin.class);
-
     private final static String EMAIL_PARAM = "email";
     private final static String PASSWORD_PARAM = "password";
-    private final static String SEPARATOR = " : ";
-    private final static String ERROR_MSG = "errorMsg";
-    private final static String LOGIN_SUCCESS = "User login success with email ";
-    private final static String LOGIN_FAILURE = "User login failure with email ";
-    private final static String MESSAGE = "invalid.credentials";
+    private final static String ERRORS_LIST = "errors";
+    private final static String INVALID_CREDENTIALS = "invalid.credentials";
 
     private final UserService userService = UserServiceImpl.getInstance();
+    private Validator<String> emailValidator = new EmailValidator();
+    private Validator<String> passwordValidator = new PasswordValidator();
     private User userDto;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        if(isAlreadyLoggedIn(request.getSession())) {
-            response.sendRedirect(request.getServletPath() + PagesPaths.HOME_PATH);
+        if(Util.isAlreadyLoggedIn(request.getSession())) {
+            Util.redirectTo(request, response, PagesPaths.HOME_PATH);
             return REDIRECTED;
         }
 
         userDto = getDataFromRequest(request);
-        logger.debug(EMAIL_PARAM + SEPARATOR + userDto.getEmail());
 
-        if(userService.isCredentialsValid(userDto.getEmail(),
-                userDto.getPassword())) {
-            onSuccess(request, response);
+        List<String> errors = validateData(request);
+
+        if(errors.isEmpty()) {
+            addUserToSessionAndRedirect(request, response);
             return REDIRECTED;
         }
 
-        onFailure(request);
-        return Views.LOGIN_VIEW;
-    }
+        addInvalidDataToRequest(request, errors);
 
-    private boolean isAlreadyLoggedIn(HttpSession session) {
-        return session.getAttribute(Attributes.USER_ATTR) != null;
+        return Views.LOGIN_VIEW;
     }
 
     private User getDataFromRequest(HttpServletRequest request) {
@@ -64,20 +64,38 @@ public class PostLogin implements Command {
                 .build();
     }
 
-    private void onSuccess(HttpServletRequest request,
+    private List<String> validateData(HttpServletRequest request) {
+        List<String> errors = new ArrayList<>();
+
+        if(!emailValidator.isValid(userDto.getEmail())) {
+            errors.add(emailValidator.getErrorKey());
+        }
+
+        if(!passwordValidator.isValid(userDto.getPassword())) {
+            errors.add(passwordValidator.getErrorKey());
+        }
+
+        /* Check if entered password matches with user password only in case,
+            when email and password is valid
+        */
+        if(errors.isEmpty() && !userService.
+                isCredentialsValid(userDto.getEmail(), userDto.getPassword())) {
+            errors.add(INVALID_CREDENTIALS);
+        }
+
+        return errors;
+    }
+
+    private void addUserToSessionAndRedirect(HttpServletRequest request,
                            HttpServletResponse response)
             throws IOException {
         Optional<User> user = userService.findByEmail(userDto.getEmail());
         request.getSession().setAttribute(Attributes.USER_ATTR, user.get());
-        response.sendRedirect(request.getServletPath() + PagesPaths.HOME_PATH);
-
-        logger.debug(LOGIN_SUCCESS + userDto.getEmail());
+        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
     }
 
-    private void onFailure(HttpServletRequest request) {
+    private void addInvalidDataToRequest(HttpServletRequest request, List<String> errors) {
         request.setAttribute(Attributes.USER_ATTR, userDto);
-        request.setAttribute(ERROR_MSG, MESSAGE);
-
-        logger.debug(LOGIN_FAILURE + userDto.getEmail());
+        request.setAttribute(ERRORS_LIST, errors);
     }
 }

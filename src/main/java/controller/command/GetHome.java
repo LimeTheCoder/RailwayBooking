@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static controller.constants.Views.HOME_VIEW;
+import static controller.util.constants.Views.HOME_VIEW;
 
 
 public class GetHome implements Command {

@@ -1,7 +1,7 @@
 package controller.command;
 
 
-import controller.constants.Views;
+import controller.util.constants.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

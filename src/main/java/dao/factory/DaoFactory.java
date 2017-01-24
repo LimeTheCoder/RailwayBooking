@@ -19,7 +19,7 @@ public abstract class DaoFactory {
     private static DaoFactory instance;
 
     public static DaoFactory getInstance(){
-        if( instance == null) {
+        if(instance == null) {
             ResourceBundle properties = ResourceBundle.getBundle(DB_BUNDLE);
             String factoryClass = properties.getString(DB_FACTORY_CLASS);
             try {

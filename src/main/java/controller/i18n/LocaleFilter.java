@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * Set appropriate locale into session scope
+ * Manage locales of user session
  *
- * @author Taras Sakahrchuk
+ * @author Taras Sakharchuk
  */
 public class LocaleFilter implements Filter{
     private final static String LANG = "lang";
