@@ -10,7 +10,7 @@ CREATE TABLE Users (
   name VARCHAR(50) NOT NULL,
   surname VARCHAR(50) NOT NULL,
   phone VARCHAR(15) NOT NULL,
-  role ENUM('USER', 'ADMIN') NOT NULL,
+  role ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
   password VARCHAR(60) NOT NULL,
   PRIMARY KEY (email))
   ENGINE = InnoDB
@@ -67,18 +67,44 @@ CREATE TABLE Routes(
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS Requests;
+
+CREATE TABLE Requests(
+  id INT(10) NOT NULL AUTO_INCREMENT,
+  passenger VARCHAR(50) NOT NULL,
+  departure INT(10) NOT NULL,
+  destination INT(10) NOT NULL,
+  departure_time TIMESTAMP NOT NULL DEFAULT now(),
+  creation_time TIMESTAMP NOT NULL DEFAULT now(),
+  PRIMARY KEY (id),
+  CONSTRAINT passenger_fk
+  	FOREIGN KEY(passenger)
+  	REFERENCES Users(email)
+  	ON DELETE CASCADE
+  	ON UPDATE CASCADE,
+  CONSTRAINT departure_fk
+  	FOREIGN KEY(departure)
+  	REFERENCES Stations(id)
+  	ON DELETE CASCADE,
+  CONSTRAINT destination_fk
+  	FOREIGN KEY(destination)
+  	REFERENCES Stations(id)
+  	ON DELETE CASCADE)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 DROP TABLE IF EXISTS Invoices;
 
 CREATE TABLE Invoices(
   id INT(10) NOT NULL AUTO_INCREMENT,
-  passenger VARCHAR(50) NOT NULL,
+  request INT(10) NOT NULL,
   route INT(10) NOT NULL,
+  status ENUM('PAID', 'PENDING', 'REJECTED') NOT NULL DEFAULT 'PENDING',
   PRIMARY KEY (id),
-  CONSTRAINT passenger_fk 
-  	FOREIGN KEY(passenger) 
-  	REFERENCES Users(email)
-  	ON DELETE CASCADE
-  	ON UPDATE CASCADE,
+  CONSTRAINT request_fk
+  	FOREIGN KEY(request)
+  	REFERENCES Requests(id)
+  	ON DELETE CASCADE,
   CONSTRAINT route_fk 
   	FOREIGN KEY(route) 
   	REFERENCES Routes(id)
@@ -168,8 +194,19 @@ VALUES(1, 4, '2016-08-03 12:30:00', '2016-08-03 20:50:00', 'M6209-19', 250);
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
 VALUES(5, 8, '2016-08-04 13:10:00', '2016-08-04 18:20:00', 'L6309-50', 90);
 
-INSERT INTO Invoices(passenger, route) VALUES('test@gmail.com', 1);
-INSERT INTO Invoices(passenger, route) VALUES('test2@gmail.com', 1);
-INSERT INTO Invoices(passenger, route) VALUES('test3@gmail.com', 1);
-INSERT INTO Invoices(passenger, route) VALUES('test2@gmail.com', 2);
-INSERT INTO Invoices(passenger, route) VALUES('test3@gmail.com', 3);
+INSERT INTO Requests(passenger, departure, destination, departure_time)
+VALUES('test@gmail.com', 1, 4, '2016-08-03 00:00:00');
+INSERT INTO Requests(passenger, departure, destination, departure_time)
+VALUES('test2@gmail.com', 1, 4, '2016-08-03 00:00:00');
+INSERT INTO Requests(passenger, departure, destination, departure_time)
+VALUES('test3@gmail.com', 1, 4, '2016-08-03 00:00:00');
+INSERT INTO Requests(passenger, departure, destination, departure_time)
+VALUES('test2@gmail.com', 3, 6, '2016-08-04 00:00:00');
+INSERT INTO Requests(passenger, departure, destination, departure_time)
+VALUES('test3@gmail.com', 5, 8, '2016-08-04 00:00:00');
+
+INSERT INTO Invoices(request, route) VALUES(1, 1);
+INSERT INTO Invoices(request, route) VALUES(2, 1);
+INSERT INTO Invoices(request, route) VALUES(3, 1);
+INSERT INTO Invoices(request, route) VALUES(4, 2);
+INSERT INTO Invoices(request, route) VALUES(5, 4);
