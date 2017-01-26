@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MySqlRequestDao implements RequestDao {
     private final static String SQL_SELECT_ALL =
             "SELECT r.departure, r.destination, r.departure_time, " +
-                    "r.creation_time, r.id, r.passenger, " +
+                    "r.creation_time, r.id, r.passenger" +
                     "s1.name AS dep_name, s1.city as dep_city, " +
                     "s1.country as dep_country, s1.id as dep_id, " +
                     "s2.name AS dest_name, s2.city as dest_city, " +
@@ -37,6 +37,7 @@ public class MySqlRequestDao implements RequestDao {
                     "departure_time = ?, passenger = ?";
 
     private final static String WHERE_ID = " WHERE id = ?";
+    private final static String WHERE_PASSENGER = "WHERE passenger = ?";
 
     private final Connection connection;
     private final ReadConverter<Request> converter;
@@ -121,7 +122,7 @@ public class MySqlRequestDao implements RequestDao {
         Objects.requireNonNull(request);
 
         try (PreparedStatement statement = connection
-                .prepareStatement(SQL_INSERT + WHERE_ID)) {
+                .prepareStatement(SQL_UPDATE + WHERE_ID)) {
 
             prepareStatement(statement, request);
 
@@ -129,6 +130,22 @@ public class MySqlRequestDao implements RequestDao {
 
             statement.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Request> findAllByPassenger(Long passengerId) {
+        Objects.requireNonNull(passengerId);
+
+        try (PreparedStatement statement = connection
+                .prepareStatement(SQL_SELECT_ALL + WHERE_PASSENGER)) {
+
+            statement.setLong(1, passengerId);
+            ResultSet resultSet = statement.executeQuery();
+
+            return converter.convertToList(resultSet);
         } catch (SQLException e) {
             throw new DaoException(e);
         }

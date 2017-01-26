@@ -39,4 +39,5 @@ public abstract class DaoFactory {
     public abstract StationDao getStationDao(DaoConnection connection);
     public abstract TrainDao getTrainDao(DaoConnection connection);
     public abstract UserDao getUserDao(DaoConnection connection);
+    public abstract RequestDao getRequestDao(DaoConnection connection);
 }

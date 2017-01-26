@@ -55,6 +55,11 @@ public class MySqlDaoFactory extends DaoFactory {
         return new MySqlUserDao(getSqlConnection(connection));
     }
 
+    @Override
+    public RequestDao getRequestDao(DaoConnection connection) {
+        return new MySqlRequestDao(getSqlConnection(connection));
+    }
+
     private Connection getSqlConnection(DaoConnection connection) {
         checkConnection(connection);
         return (Connection) connection.getNativeConnection();
