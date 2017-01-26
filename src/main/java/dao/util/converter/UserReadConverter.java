@@ -18,27 +18,6 @@ public class UserReadConverter implements ReadConverter<User> {
     private final static String ROLE_FIELD = "role";
 
     @Override
-    public List<User> convertToList(ResultSet resultSet) throws SQLException {
-        return convertToList(resultSet, "");
-    }
-
-    @Override
-    public List<User> convertToList(ResultSet resultSet, String prefix) throws SQLException {
-        List<User> users = new ArrayList<>();
-
-        while (resultSet.next()) {
-            users.add(convertToObject(resultSet, prefix));
-        }
-
-        return users;
-    }
-
-    @Override
-    public User convertToObject(ResultSet resultSet) throws SQLException {
-        return convertToObject(resultSet, "");
-    }
-
-    @Override
     public User convertToObject(ResultSet resultSet, String prefix) throws SQLException {
         return User.newBuilder()
                 .setEmail(resultSet.getString(prefix + EMAIL_FIELD))

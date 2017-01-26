@@ -36,28 +36,6 @@ public class RouteReadConverter implements ReadConverter<Route> {
     }
 
     @Override
-    public List<Route> convertToList(ResultSet resultSet) throws SQLException {
-        return convertToList(resultSet, "");
-    }
-
-    @Override
-    public List<Route> convertToList(ResultSet resultSet, String prefix)
-            throws SQLException {
-        List<Route> routes = new ArrayList<>();
-
-        while (resultSet.next()) {
-            routes.add(convertToObject(resultSet, prefix));
-        }
-
-        return routes;
-    }
-
-    @Override
-    public Route convertToObject(ResultSet resultSet) throws SQLException {
-        return convertToObject(resultSet, "");
-    }
-
-    @Override
     public Route convertToObject(ResultSet resultSet, String prefix) throws SQLException {
         Station departureStation = stationConverter
                 .convertToObject(resultSet, prefix + DEPARTURE_PREFIX);

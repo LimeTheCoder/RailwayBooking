@@ -2,6 +2,7 @@ package dao.util.converter;
 
 
 import entity.Invoice;
+import entity.Request;
 import entity.Route;
 import entity.User;
 
@@ -12,47 +13,33 @@ import java.util.List;
 
 public class InvoiceReadConverter implements ReadConverter<Invoice> {
     private final static String ID_FIELD = "id";
+    private final static String STATUS_FIELD = "status";
 
     private final static String ROUTE_PREFIX = "rt_";
+    private final static String REQUEST_PREFIX = "req_";
 
-    private final ReadConverter<User> userConverter;
+    private final ReadConverter<Request> requestConverter;
     private final ReadConverter<Route> routeConverter;
 
     public InvoiceReadConverter() {
-        this(new UserReadConverter(), new RouteReadConverter());
+        this(new RequestReadConverter(), new RouteReadConverter());
     }
 
-    public InvoiceReadConverter(ReadConverter<User> userConverter, ReadConverter<Route> routeConverter) {
-        this.userConverter = userConverter;
+    public InvoiceReadConverter(ReadConverter<Request> requestConverter, ReadConverter<Route> routeConverter) {
+        this.requestConverter = requestConverter;
         this.routeConverter = routeConverter;
     }
 
     @Override
-    public List<Invoice> convertToList(ResultSet resultSet) throws SQLException {
-        return convertToList(resultSet, "");
-    }
-
-    @Override
-    public List<Invoice> convertToList(ResultSet resultSet, String prefix) throws SQLException {
-        List<Invoice> invoices = new ArrayList<>();
-
-        while (resultSet.next()) {
-            invoices.add(convertToObject(resultSet, prefix));
-        }
-
-        return invoices;
-    }
-
-    @Override
-    public Invoice convertToObject(ResultSet resultSet) throws SQLException {
-        return convertToObject(resultSet, "");
-    }
-
-    @Override
     public Invoice convertToObject(ResultSet resultSet, String prefix) throws SQLException {
-        User passenger = userConverter.convertToObject(resultSet);
-        Route route = routeConverter.convertToObject(resultSet, ROUTE_PREFIX);
-        long id = resultSet.getLong(ID_FIELD);
-        return new Invoice(id, passenger, route);
+        Request request = requestConverter.convertToObject(resultSet, prefix + REQUEST_PREFIX);
+        Route route = routeConverter.convertToObject(resultSet, prefix + ROUTE_PREFIX);
+        return Invoice.newBuilder()
+                .setId(resultSet.getLong(prefix + ID_FIELD))
+                .setStatus(Invoice.Status.valueOf(resultSet
+                        .getString(prefix + STATUS_FIELD)))
+                .setRequest(request)
+                .setRoute(route)
+                .build();
     }
 }
