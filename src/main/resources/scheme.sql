@@ -47,6 +47,7 @@ CREATE TABLE Routes(
   departure_time TIMESTAMP NOT NULL DEFAULT now(),
   destination_time TIMESTAMP NOT NULL DEFAULT now(),
   train VARCHAR(10) NOT NULL UNIQUE,
+  reserved_cnt INT(10) NOT NULL DEFAULT 0,
   price INT(10) NOT NULL,
   PRIMARY KEY (id),
   INDEX dep_dest_idx(departure_station, destination_station),
@@ -84,6 +85,48 @@ CREATE TABLE Invoices(
   	ON DELETE CASCADE)
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+DROP TRIGGER IF EXISTS inc_reserved_cnt;
+
+DELIMITER $
+
+CREATE TRIGGER inc_reserved_cnt
+	BEFORE INSERT ON Invoices FOR EACH ROW
+    BEGIN
+		DECLARE train_id VARCHAR(10);
+    DECLARE cnt INT(10);
+
+    SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
+    SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
+
+		IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
+		THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
+		ELSE
+			UPDATE Routes
+            SET reserved_cnt = reserved_cnt + 1
+            WHERE id = NEW.route;
+		END IF;
+    END$
+
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS dec_reserved_cnt;
+
+DELIMITER $
+
+CREATE TRIGGER dec_reserved_cnt
+	BEFORE DELETE ON Invoices FOR EACH ROW
+    BEGIN
+
+    UPDATE Routes
+    SET reserved_cnt = reserved_cnt - 1
+    WHERE id = OLD.route;
+
+  END$
+
+DELIMITER ;
 
 INSERT INTO Users(email, password, name, surname, phone, role) 
 	VALUES('test@gmail.com', '$2a$10$.jtJduq/M3xeePiuWUhytOCH4u6WYZiLKJnVBWNpPQa4SGHjck8bC',

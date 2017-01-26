@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MySqlRouteDao implements RouteDao {
     private final static String SQL_SELECT_ALL =
             "SELECT r.departure_station, r.destination_station, r.departure_time, " +
-                    "r.destination_time, r.price, r.train, r.id, " +
+                    "r.destination_time, r.price, r.train, r.reserved_cnt, r.id, " +
                     "s1.name AS dep_name, s1.city as dep_city, " +
                     "s1.country as dep_country, s1.id as dep_id, " +
                     "s2.name AS dest_name, s2.city as dest_city, " +

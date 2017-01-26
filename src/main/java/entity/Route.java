@@ -10,6 +10,7 @@ public class Route {
     private Date departureTime;
     private Date destinationTime;
     private Train train;
+    private int reservedCnt;
     private int price;
 
     public static class Builder {
@@ -20,6 +21,7 @@ public class Route {
         private Date destinationTime;
         private Train train;
         private int price;
+        private int reservedCnt;
 
         public Builder setId(long id) {
             this.id = id;
@@ -51,6 +53,11 @@ public class Route {
             return this;
         }
 
+        public Builder setReservedCnt(int reservedCnt) {
+            this.reservedCnt = reservedCnt;
+            return this;
+        }
+
         public Builder setPrice(int price) {
             this.price = price;
             return this;
@@ -66,6 +73,7 @@ public class Route {
             route.setDestinationTime(destinationTime);
             route.setPrice(price);
             route.setTrain(train);
+            route.setReservedCnt(reservedCnt);
 
             return route;
         }
@@ -121,6 +129,14 @@ public class Route {
 
     public void setTrain(Train train) {
         this.train = train;
+    }
+
+    public int getReservedCnt() {
+        return reservedCnt;
+    }
+
+    public void setReservedCnt(int reservedCnt) {
+        this.reservedCnt = reservedCnt;
     }
 
     public int getPrice() {

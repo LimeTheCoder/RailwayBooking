@@ -16,6 +16,7 @@ public class RouteReadConverter implements ReadConverter<Route> {
     private final static String DEPARTURE_TIME_FIELD = "departure_time";
     private final static String DESTINATION_TIME_FIELD = "destination_time";
     private final static String PRICE_FIELD = "price";
+    private final static String RESERVED_CNT_FIELD = "reserved_cnt";
 
     private final static String TRAIN_PREFIX = "tr_";
     private final static String DEPARTURE_PREFIX = "dep_";
@@ -71,6 +72,7 @@ public class RouteReadConverter implements ReadConverter<Route> {
                         resultSet.getTimestamp(prefix + DEPARTURE_TIME_FIELD)))
                 .setDestinationTime(Util.toDate(
                         resultSet.getTimestamp(prefix + DESTINATION_TIME_FIELD)))
+                .setReservedCnt(resultSet.getInt(prefix + RESERVED_CNT_FIELD))
                 .setDestination(destinationStation)
                 .setDeparture(departureStation)
                 .setTrain(train)
