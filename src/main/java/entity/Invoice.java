@@ -2,16 +2,54 @@ package entity;
 
 
 public class Invoice {
+
+    public enum Status {
+        PAID, PENDING, REJECTED
+    }
+
     private long id;
-    private User passenger;
+    private Request request;
     private Route route;
+    private Status status;
 
-    public Invoice() {}
+    public static class Builder {
+        private long id;
+        private Request request;
+        private Route route;
+        private Status status;
 
-    public Invoice(long id, User passenger, Route route) {
-        this.id = id;
-        this.passenger = passenger;
-        this.route = route;
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setRequest(Request request) {
+            this.request = request;
+            return this;
+        }
+
+        public Builder setRoute(Route route) {
+            this.route = route;
+            return this;
+        }
+
+        public Builder setStatus(Status status) {
+            this.status = status;
+            return this;
+        }
+
+        public Invoice build() {
+            Invoice invoice = new Invoice();
+            invoice.setId(id);
+            invoice.setRequest(request);
+            invoice.setStatus(status);
+            invoice.setRoute(route);
+            return invoice;
+        }
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     public long getId() {
@@ -22,12 +60,20 @@ public class Invoice {
         this.id = id;
     }
 
-    public User getPassenger() {
-        return passenger;
+    public Request getRequest() {
+        return request;
     }
 
-    public void setPassenger(User passenger) {
-        this.passenger = passenger;
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Route getRoute() {
