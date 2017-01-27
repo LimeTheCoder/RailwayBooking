@@ -29,7 +29,7 @@ public class MySqlInvoiceDao implements InvoiceDao {
                     "t1.serial_no as rt_tr_serial_no, t1.capacity as rt_tr_capacity, " +
                     "u.email as req_email, u.name as req_name, u.surname as req_surname, " +
                     "u.password as req_password, u.phone as req_phone, u.role as req_role, " +
-                    "req.departure_time as req_departure_time, " +
+                    "req.departure_time as req_departure_time, req.result_cnt as req_result_cnt, " +
                     "req.creation_time as req_creation_time, req.id as req_id, " +
                     "s3.name AS req_dep_name, s3.city as req_dep_city, " +
                     "s3.country as req_dep_country, " +

@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MySqlRequestDao implements RequestDao {
     private final static String SQL_SELECT_ALL =
             "SELECT r.departure, r.destination, r.departure_time, " +
-                    "r.creation_time, r.id, r.passenger" +
+                    "r.creation_time, r.id, r.passenger, r.result_cnt, " +
                     "s1.name AS dep_name, s1.city as dep_city, " +
                     "s1.country as dep_country, s1.id as dep_id, " +
                     "s2.name AS dest_name, s2.city as dest_city, " +
@@ -29,15 +29,15 @@ public class MySqlRequestDao implements RequestDao {
 
     private final static String SQL_INSERT =
             "INSERT INTO Requests (departure, destination, " +
-                    "departure_time, passenger) " +
-                    "VALUES (?,?,?,?) ";
+                    "departure_time, passenger, result_cnt) " +
+                    "VALUES (?,?,?,?,?) ";
     private final static String SQL_DELETE = "DELETE FROM Requests";
     private final static String SQL_UPDATE =
             "UPDATE Requests SET departure = ?, destination = ?, " +
-                    "departure_time = ?, passenger = ?";
+                    "departure_time = ?, passenger = ?, result_cnt = ? ";
 
     private final static String WHERE_ID = " WHERE id = ?";
-    private final static String WHERE_PASSENGER = "WHERE passenger = ?";
+    private final static String WHERE_PASSENGER = " WHERE passenger = ?";
 
     private final Connection connection;
     private final ReadConverter<Request> converter;
@@ -126,7 +126,7 @@ public class MySqlRequestDao implements RequestDao {
 
             prepareStatement(statement, request);
 
-            statement.setLong(5, request.getId());
+            statement.setLong(6, request.getId());
 
             statement.executeUpdate();
 
@@ -136,13 +136,13 @@ public class MySqlRequestDao implements RequestDao {
     }
 
     @Override
-    public List<Request> findAllByPassenger(Long passengerId) {
-        Objects.requireNonNull(passengerId);
+    public List<Request> findAllByPassenger(String email) {
+        Objects.requireNonNull(email);
 
         try (PreparedStatement statement = connection
                 .prepareStatement(SQL_SELECT_ALL + WHERE_PASSENGER)) {
 
-            statement.setLong(1, passengerId);
+            statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
 
             return converter.convertToList(resultSet);
@@ -157,5 +157,6 @@ public class MySqlRequestDao implements RequestDao {
         statement.setLong(2, request.getDestination().getId());
         statement.setTimestamp(3, Util.toTimestamp(request.getDepartureTime()));
         statement.setString(4, request.getPassenger().getEmail());
+        statement.setInt(5, request.getResultCnt());
     }
 }

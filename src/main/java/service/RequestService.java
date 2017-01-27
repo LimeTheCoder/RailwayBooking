@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface RequestService {
     Optional<Request> findById(Long id);
-    List<Request> findByPassengerId(Long id);
+    List<Request> findAllByPassenger(String email);
     Request createRequest(Request request);
 }

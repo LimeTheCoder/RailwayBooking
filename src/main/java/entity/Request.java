@@ -10,6 +10,7 @@ public class Request {
     private Station destination;
     private Date departureTime;
     private Date creationTime;
+    private int resultCnt;
 
     public static class Builder {
         private long id;
@@ -18,6 +19,7 @@ public class Request {
         private Station destination;
         private Date departureTime;
         private Date creationTime;
+        private int resultCnt;
 
         public Builder setId(long id) {
             this.id = id;
@@ -49,6 +51,11 @@ public class Request {
             return this;
         }
 
+        public Builder setResultCnt(int resultCnt) {
+            this.resultCnt = resultCnt;
+            return this;
+        }
+
         public Request build() {
             Request request = new Request();
             request.setId(id);
@@ -57,6 +64,7 @@ public class Request {
             request.setDestination(destination);
             request.setDepartureTime(departureTime);
             request.setPassenger(passenger);
+            request.setResultCnt(resultCnt);
             return request;
         }
     }
@@ -111,5 +119,13 @@ public class Request {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public int getResultCnt() {
+        return resultCnt;
+    }
+
+    public void setResultCnt(int resultCnt) {
+        this.resultCnt = resultCnt;
     }
 }

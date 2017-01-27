@@ -76,6 +76,7 @@ CREATE TABLE Requests(
   destination INT(10) NOT NULL,
   departure_time TIMESTAMP NOT NULL DEFAULT now(),
   creation_time TIMESTAMP NOT NULL DEFAULT now(),
+  result_cnt INT(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   CONSTRAINT passenger_fk
   	FOREIGN KEY(passenger)
@@ -194,16 +195,16 @@ VALUES(1, 4, '2016-08-03 12:30:00', '2016-08-03 20:50:00', 'M6209-19', 250);
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
 VALUES(5, 8, '2016-08-04 13:10:00', '2016-08-04 18:20:00', 'L6309-50', 90);
 
-INSERT INTO Requests(passenger, departure, destination, departure_time)
-VALUES('test@gmail.com', 1, 4, '2016-08-03 00:00:00');
-INSERT INTO Requests(passenger, departure, destination, departure_time)
-VALUES('test2@gmail.com', 1, 4, '2016-08-03 00:00:00');
-INSERT INTO Requests(passenger, departure, destination, departure_time)
-VALUES('test3@gmail.com', 1, 4, '2016-08-03 00:00:00');
-INSERT INTO Requests(passenger, departure, destination, departure_time)
-VALUES('test2@gmail.com', 3, 6, '2016-08-04 00:00:00');
-INSERT INTO Requests(passenger, departure, destination, departure_time)
-VALUES('test3@gmail.com', 5, 8, '2016-08-04 00:00:00');
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test2@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test3@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test2@gmail.com', 3, 6, '2016-08-04 00:00:00', 1);
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test3@gmail.com', 5, 8, '2016-08-04 00:00:00', 1);
 
 INSERT INTO Invoices(request, route) VALUES(1, 1);
 INSERT INTO Invoices(request, route) VALUES(2, 1);

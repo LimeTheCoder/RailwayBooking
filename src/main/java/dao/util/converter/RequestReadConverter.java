@@ -16,6 +16,7 @@ public class RequestReadConverter implements ReadConverter<Request> {
     private final static String DEPARTURE_TIME_FIELD = "departure_time";
     private final static String CREATION_TIME_FIELD = "creation_time";
     private final static String ID_FIELD = "id";
+    private final String RESULT_CNT_FIELD = "result_cnt";
 
     private final ReadConverter<User> userConverter;
     private final ReadConverter<Station> stationConverter;
@@ -47,6 +48,7 @@ public class RequestReadConverter implements ReadConverter<Request> {
                 .setDestination(destinationStation)
                 .setPassenger(passenger)
                 .setId(resultSet.getLong(prefix + ID_FIELD))
+                .setResultCnt(resultSet.getInt(prefix + RESULT_CNT_FIELD))
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package controller.command;
 
 
+import controller.util.Util;
 import controller.util.constants.PagesPaths;
 import org.apache.log4j.Logger;
 
@@ -17,7 +18,7 @@ public class DefaultCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Default command on " + request.getRequestURI());
-        response.sendRedirect(request.getServletPath() + PagesPaths.HOME_PATH);
+        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
         return REDIRECTED;
     }
 }

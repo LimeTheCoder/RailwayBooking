@@ -33,10 +33,10 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> findByPassengerId(Long id) {
+    public List<Request> findAllByPassenger(String email) {
         try(DaoConnection connection = daoFactory.getConnection()) {
             RequestDao requestDao = daoFactory.getRequestDao(connection);
-            return requestDao.findAllByPassenger(id);
+            return requestDao.findAllByPassenger(email);
         }
     }
 

@@ -65,3 +65,4 @@
 
     <jsp:include page="/WEB-INF/views/snippets/footer.jsp" />
 </body>
+</html>

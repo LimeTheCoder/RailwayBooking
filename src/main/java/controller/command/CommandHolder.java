@@ -35,6 +35,10 @@ public class CommandHolder {
                 new PostSignUp());
         commands.put(buildKey(PagesPaths.LOGOUT_PATH, Method.GET),
                 new Logout());
+        commands.put(buildKey(PagesPaths.REQUESTS_HISTORY_PATH, Method.GET),
+                new GetRequestsHistory());
+        commands.put(buildKey(PagesPaths.ROUTES_PATH, Method.GET),
+                new GetRoutes());
     }
 
     public Command getCommand(String path, Method method) {
