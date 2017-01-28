@@ -6,6 +6,12 @@ public class Station {
     private String city;
     private String country;
 
+    public Station() {}
+
+    public Station(long id) {
+        this.id = id;
+    }
+
     public static class Builder {
         private long id;
         private String name;

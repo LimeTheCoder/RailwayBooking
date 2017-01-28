@@ -27,7 +27,6 @@ import java.util.Optional;
 public class PostLogin implements Command {
     private final static String EMAIL_PARAM = "email";
     private final static String PASSWORD_PARAM = "password";
-    private final static String ERRORS_LIST = "errors";
     private final static String INVALID_CREDENTIALS = "invalid.credentials";
 
     private final UserService userService = UserServiceImpl.getInstance();
@@ -98,6 +97,6 @@ public class PostLogin implements Command {
     private void addInvalidDataToRequest(HttpServletRequest request,
                                          List<String> errors) {
         request.setAttribute(Attributes.USER_ATTR, userDto);
-        request.setAttribute(ERRORS_LIST, errors);
+        request.setAttribute(Attributes.ERRORS_LIST, errors);
     }
 }

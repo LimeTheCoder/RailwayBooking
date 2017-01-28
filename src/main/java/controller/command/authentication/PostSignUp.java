@@ -29,7 +29,6 @@ public class PostSignUp implements Command {
     private final static String SURNAME_PARAM = "surname";
     private final static String PHONE_PARAM = "phone";
 
-    private final static String ERRORS_LIST = "errors";
     private final static String INVALID_NAME_KEY = "invalid.name";
     private final static String INVALID_SURNAME_KEY = "invalid.surname";
     private final static String USER_ALREADY_EXISTS = "user.exists";
@@ -114,7 +113,7 @@ public class PostSignUp implements Command {
     private void addInvalidDataToRequest(HttpServletRequest request,
                                          List<String> errors) {
         request.setAttribute(Attributes.USER_ATTR, userDto);
-        request.setAttribute(ERRORS_LIST, errors);
+        request.setAttribute(Attributes.ERRORS_LIST, errors);
     }
 
     private void addUserToSessionAndRedirect(HttpServletRequest request,

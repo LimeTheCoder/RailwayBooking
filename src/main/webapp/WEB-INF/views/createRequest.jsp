@@ -83,7 +83,7 @@
                             <span class="input-group-addon"><i class="fa fa-calendar fa" aria-hidden="true"></i></span>
                             <input type="date" class="form-control" name="dep_date" id="dep_date"
                                    placeholder="<fmt:message key="request.enter.dep.date" />"
-                                   value="${requestScope.request.getDepartureDate()}" />
+                                   value="${requestScope.request.getDepartureTime()}" />
                         </div>
                     </div>
                 </div>
