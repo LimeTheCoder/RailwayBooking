@@ -51,7 +51,7 @@
                         <td><fmt:formatDate type="time" dateStyle="medium"
                                             value="${route.getDepartureTime()}"/></td>
                         <td>${route.getPrice()}$</td>
-                        <td>50</td>
+                        <td>${route.getFreePlaces()}</td>
                         <td><a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-plane"></span>Reserve</a>
                     </tr>
                 </c:forEach>

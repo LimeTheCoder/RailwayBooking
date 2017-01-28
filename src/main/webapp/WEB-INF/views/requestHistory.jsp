@@ -9,6 +9,10 @@
 <head>
     <jsp:include page="/WEB-INF/views/snippets/header.jsp" />
     <style>
+        hr{
+            width: 10%;
+            color: #fff;
+        }
         .custab{
             border: 1px solid #ccc;
             padding: 5px;
@@ -26,15 +30,22 @@
 <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
 
 <div class="container">
+    <div class="panel-heading">
+        <div class="panel-title text-center">
+            <h1 class="title"><fmt:message key="request.history" /></h1>
+            <hr />
+        </div>
+    </div>
+
     <div class="row col-md-10 col-md-offset-1 custyle">
         <table class="table table-striped custab">
             <thead>
             <tr>
-                <th>Creation Time</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Departure Date</th>
-                <th>Results count</th>
+                <th><fmt:message key="request.creation.time" /></th>
+                <th><fmt:message key="request.from" /></th>
+                <th><fmt:message key="request.to" /></th>
+                <th><fmt:message key="request.departure.date" /></th>
+                <th><fmt:message key="request.results.cnt" /></th>
             </tr>
             </thead>
             <tbody>
