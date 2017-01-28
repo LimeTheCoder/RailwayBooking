@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class PostRequestForm implements Command {
@@ -46,7 +47,7 @@ public class PostRequestForm implements Command {
         userRequestDto = getDataFromHttpRequest(request, errors);
 
         if(errors.isEmpty()) {
-            addPassengerToUserRequest(request);
+            setUpUserRequestFields(request);
             setAsAttributeAndRedirect(request, response);
             return REDIRECTED;
         }
@@ -76,10 +77,20 @@ public class PostRequestForm implements Command {
                 .build();
     }
 
-    private void addPassengerToUserRequest(HttpServletRequest request) {
+    private void setUpUserRequestFields(HttpServletRequest request) {
         User user = (User)request.getSession()
                 .getAttribute(Attributes.USER_ATTR);
         userRequestDto.setPassenger(user);
+
+        Optional<Station> departure = stationService.findById(userRequestDto
+                .getDeparture().getId());
+        Optional<Station> destination = stationService.findById(userRequestDto
+                .getDestination().getId());
+
+        userRequestDto.setDeparture(departure.orElse(userRequestDto
+                .getDeparture()));
+        userRequestDto.setDestination(destination.orElse(userRequestDto
+                .getDestination()));
     }
 
     private void setAsAttributeAndRedirect(HttpServletRequest request,
@@ -87,7 +98,7 @@ public class PostRequestForm implements Command {
             throws IOException{
         request.getSession().setAttribute(Attributes.USER_REQUEST_ATTR,
                 userRequestDto);
-        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
+        Util.redirectTo(request, response, PagesPaths.ROUTES_PATH);
     }
 
     private void addInvalidDataToRequest(HttpServletRequest request,

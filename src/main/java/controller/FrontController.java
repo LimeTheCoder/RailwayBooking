@@ -54,9 +54,6 @@ public class FrontController extends HttpServlet {
         Command command = commandHolder.getCommand(getPath(request),
                 getMethod(request));
 
-        logger.debug(REQUESTED_PATH + getPath(request));
-        logger.debug(request.getContextPath());
-
         String path = command.execute(request, response);
         if(!path.equals(Command.REDIRECTED)) {
             request.getRequestDispatcher(path).forward(request, response);
