@@ -9,9 +9,8 @@ import entity.Route;
 import entity.Station;
 
 import java.sql.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.Date;
 
 public class MySqlRouteDao implements RouteDao {
     private final static String SQL_SELECT_ALL =
@@ -40,6 +39,9 @@ public class MySqlRouteDao implements RouteDao {
     private final static String WHERE_ID = " WHERE id = ?";
     private final static String WHERE_DEP_AND_DEST_STATION_ID =
             " WHERE departure_station = ? and destination_station = ?";
+    private final static String WHERE_STATIONS_AND_DATE =
+            " WHERE departure_station = ? and destination_station = ? " +
+                    "and destination_time > ?";
 
     private final Connection connection;
     private final ReadConverter<Route> converter;
@@ -146,6 +148,30 @@ public class MySqlRouteDao implements RouteDao {
 
             statement.setLong(1, from.getId());
             statement.setLong(2, to.getId());
+
+            ResultSet resultSet = statement.executeQuery();
+            return converter.convertToList(resultSet);
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Route> findByStationsAndDate(Station from,
+                                             Station to,
+                                             Date after) {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+        Objects.requireNonNull(after);
+
+        try (PreparedStatement statement = connection
+                .prepareStatement(SQL_SELECT_ALL +
+                        WHERE_STATIONS_AND_DATE)) {
+
+            statement.setLong(1, from.getId());
+            statement.setLong(2, to.getId());
+            statement.setTimestamp(3, Util.toTimestamp(after));
 
             ResultSet resultSet = statement.executeQuery();
             return converter.convertToList(resultSet);

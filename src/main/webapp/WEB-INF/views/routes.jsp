@@ -25,8 +25,55 @@
 <body>
     <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
 
+
     <div class="container">
         <div class="row col-md-10 col-md-offset-1 custyle">
+
+            <c:if test="${not empty sessionScope.user_request}">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Your request</div>
+                    <div class="panel-body">
+                        <div class="table">
+                            <table class="table table-stripped table-bordered table-hover">
+                                <tbody>
+                                <tr>
+                                    <td>From</td>
+                                    <td>${sessionScope.user_request.getDeparture()}</td>
+                                </tr>
+                                <tr>
+                                    <td>To</td>
+                                    <td>${sessionScope.user_request.getDestination()}</td>
+                                </tr>
+                                <tr>
+                                    <td>Departure date</td>
+                                    <td><fmt:formatDate type="date" dateStyle="long"
+                                                        value="${sessionScope.user_request.getDepartureTime()}"/></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    <h1 class="title">Results for your request</h1>
+                    <hr />
+                </div>
+            </div>
+            </c:if>
+
+            <c:if test="${empty sessionScope.user_request}">
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <h1 class="title">Routes schedule</h1>
+                        <hr />
+                    </div>
+                </div>
+            </c:if>
+
+            <c:choose>
+                <c:when test="${not empty requestScope.routes}">
             <table class="table table-striped custab">
                 <thead>
                 <tr>
@@ -37,7 +84,9 @@
                     <th>Time, EEST</th>
                     <th>Price</th>
                     <th>Free places</th>
-                    <th>Action</th>
+                    <c:if test="${not empty sessionScope.user_request}">
+                        <th>Action</th>
+                    </c:if>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,11 +101,20 @@
                                             value="${route.getDepartureTime()}"/></td>
                         <td>${route.getPrice()}$</td>
                         <td>${route.getFreePlaces()}</td>
-                        <td><a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-plane"></span>Reserve</a>
+                        <c:if test="${not empty sessionScope.user_request}">
+                            <td><a class='btn btn-info btn-xs' href="#">
+                                <span class="glyphicon glyphicon-plane"></span>Reserve</a>
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+            </c:when>
+            <c:otherwise>
+                No routes that matches your request.
+            </c:otherwise>
+            </c:choose>
         </div>
     </div>
 

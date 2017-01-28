@@ -7,6 +7,7 @@ import entity.Route;
 import entity.Station;
 import service.RouteService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,14 @@ public class RouteServiceImpl implements RouteService {
         try(DaoConnection connection = daoFactory.getConnection()) {
             RouteDao routeDao = daoFactory.getRouteDao(connection);
             return routeDao.findByStations(from, to);
+        }
+    }
+
+    @Override
+    public List<Route> findByStationsAndDate(Station from, Station to, Date after) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            RouteDao routeDao = daoFactory.getRouteDao(connection);
+            return routeDao.findByStationsAndDate(from, to, after);
         }
     }
 }
