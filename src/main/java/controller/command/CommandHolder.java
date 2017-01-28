@@ -1,6 +1,10 @@
 package controller.command;
 
 
+import controller.command.authentication.*;
+import controller.command.user.request.GetRequestForm;
+import controller.command.user.request.GetRequestsHistory;
+import controller.command.user.request.PostRequestForm;
 import controller.util.constants.PagesPaths;
 
 import java.util.HashMap;
@@ -37,6 +41,10 @@ public class CommandHolder {
                 new Logout());
         commands.put(buildKey(PagesPaths.REQUESTS_HISTORY_PATH, Method.GET),
                 new GetRequestsHistory());
+        commands.put(buildKey(PagesPaths.REQUEST_PATH, Method.GET),
+                new GetRequestForm());
+        commands.put(buildKey(PagesPaths.REQUEST_PATH, Method.POST),
+                new PostRequestForm());
         commands.put(buildKey(PagesPaths.ROUTES_PATH, Method.GET),
                 new GetRoutes());
     }

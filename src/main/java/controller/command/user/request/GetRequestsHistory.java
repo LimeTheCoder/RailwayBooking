@@ -1,6 +1,7 @@
-package controller.command;
+package controller.command.user.request;
 
 
+import controller.command.Command;
 import controller.util.Util;
 import controller.util.constants.Attributes;
 import controller.util.constants.PagesPaths;

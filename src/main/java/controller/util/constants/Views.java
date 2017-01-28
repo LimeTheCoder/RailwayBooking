@@ -9,4 +9,5 @@ public interface Views {
     String SIGN_UP_VIEW = VIEWS_PATH + "signup.jsp";
     String ROUTES_VIEW = VIEWS_PATH + "routes.jsp";
     String REQUESTS_HISTORY_VIEW = VIEWS_PATH + "requestHistory.jsp";
+    String REQUEST_VIEW = VIEWS_PATH + "createRequest.jsp";
 }

@@ -1,24 +1,19 @@
-package controller.command.authentication;
-
+package controller.command.user.request;
 
 import controller.command.Command;
-import controller.util.Util;
-import controller.util.constants.PagesPaths;
+import controller.util.constants.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Command that logout current user from the site.
- */
-public class Logout implements Command {
+
+public class PostRequestForm implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getSession().invalidate();
-        Util.redirectTo(request, response, PagesPaths.LOGIN_PATH);
-        return REDIRECTED;
+        System.out.println("Yo");
+        return Views.HOME_VIEW;
     }
 }

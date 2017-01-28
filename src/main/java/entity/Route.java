@@ -146,4 +146,8 @@ public class Route {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    public int getFreePlaces() {
+        return train.getCapacity() - reservedCnt;
+    }
 }
