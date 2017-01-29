@@ -10,6 +10,6 @@ public interface InvoiceService {
     Optional<Invoice> findById(long id);
     List<Invoice> findAllByPassenger(long passengerId);
     List<Invoice> findAllByRoute(long routeId);
-    Invoice insert(Invoice invoice);
+    Invoice create(Invoice invoice);
     void delete(long id);
 }

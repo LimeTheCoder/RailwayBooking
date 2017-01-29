@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class MySqlInvoiceDao implements InvoiceDao {
     private final static String SQL_SELECT_ALL =
-            "SELECT i.id, i.status, " +
+            "SELECT Invoices.id, Invoices.status, " +
                     "r.departure_station AS rt_departure_station, " +
                     "r.destination_station AS rt_destination_station, " +
                     "r.departure_time AS rt_departure_time, " +
@@ -36,12 +36,12 @@ public class MySqlInvoiceDao implements InvoiceDao {
                     "s3.id as req_dep_id, s4.name AS req_dest_name, " +
                     "s4.city as req_dest_city, " +
                     "s4.country as req_dest_country, s4.id as req_dest_id " +
-                    "FROM Invoices AS i " +
-                    "JOIN Routes as r on r.id = i.route " +
+                    "FROM Invoices " +
+                    "JOIN Routes as r on r.id = Invoices.route " +
                     "JOIN Stations AS s1 ON r.departure_station = s1.id " +
                     "JOIN Stations AS s2 ON r.destination_station = s2.id " +
                     "JOIN Trains as t1 ON r.train = t1.serial_no " +
-                    "JOIN Requests as req on i.request = req.id " +
+                    "JOIN Requests as req on Invoices.request = req.id " +
                     "JOIN Users as u on u.email = req.passenger " +
                     "JOIN Stations AS s3 ON req.departure = s3.id " +
                     "JOIN Stations AS s4 ON req.destination = s4.id ";
@@ -51,7 +51,7 @@ public class MySqlInvoiceDao implements InvoiceDao {
     private final static String SQL_UPDATE =
             "UPDATE Invoices SET request = ?, route = ?, status = ? ";
 
-    private final static String WHERE_ID = " WHERE id = ?";
+    private final static String WHERE_ID = " WHERE Invoices.id = ?";
     private final static String WHERE_PASSENGER_ID =
             " WHERE (SELECT passenger FROM Requests WHERE Requests.id = request) = ?";
     private final static String WHERE_ROUTE_ID = " WHERE route = ?";
@@ -142,7 +142,7 @@ public class MySqlInvoiceDao implements InvoiceDao {
         Objects.requireNonNull(invoice);
 
         try (PreparedStatement statement = connection
-                .prepareStatement(SQL_INSERT + WHERE_ID)) {
+                .prepareStatement(SQL_UPDATE + WHERE_ID)) {
 
             statement.setLong(1, invoice.getRequest().getId());
             statement.setLong(2, invoice.getRoute().getId());

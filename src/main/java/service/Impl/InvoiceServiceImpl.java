@@ -49,7 +49,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice insert(Invoice invoice) {
+    public Invoice create(Invoice invoice) {
         try(DaoConnection connection = daoFactory.getConnection()) {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
             return invoiceDao.insert(invoice);

@@ -15,17 +15,17 @@ import java.util.Optional;
 
 public class MySqlRequestDao implements RequestDao {
     private final static String SQL_SELECT_ALL =
-            "SELECT r.departure, r.destination, r.departure_time, " +
-                    "r.creation_time, r.id, r.passenger, r.result_cnt, " +
+            "SELECT Requests.departure, Requests.destination, Requests.departure_time, " +
+                    "Requests.creation_time, Requests.id, Requests.passenger, Requests.result_cnt, " +
                     "s1.name AS dep_name, s1.city as dep_city, " +
                     "s1.country as dep_country, s1.id as dep_id, " +
                     "s2.name AS dest_name, s2.city as dest_city, " +
                     "s2.country as dest_country, s2.id as dest_id, " +
                     "u.email, u.name, u.surname, u.password, u.phone, u.role " +
-                    "FROM Requests AS r " +
-                    "JOIN Stations AS s1 ON r.departure = s1.id " +
-                    "JOIN Stations AS s2 ON r.destination = s2.id " +
-                    "JOIN Users as u ON r.passenger = u.email";
+                    "FROM Requests " +
+                    "JOIN Stations AS s1 ON Requests.departure = s1.id " +
+                    "JOIN Stations AS s2 ON Requests.destination = s2.id " +
+                    "JOIN Users as u ON Requests.passenger = u.email";
 
     private final static String SQL_INSERT =
             "INSERT INTO Requests (departure, destination, " +
@@ -36,8 +36,10 @@ public class MySqlRequestDao implements RequestDao {
             "UPDATE Requests SET departure = ?, destination = ?, " +
                     "departure_time = ?, passenger = ?, result_cnt = ? ";
 
-    private final static String WHERE_ID = " WHERE id = ?";
-    private final static String WHERE_PASSENGER = " WHERE passenger = ?";
+    private final static String WHERE_ID = " WHERE Requests.id = ? ";
+    private final static String WHERE_PASSENGER = " WHERE passenger = ? ";
+
+    private final static String ORDER_BY_ID_DESC = " ORDER BY id DESC";
 
     private final Connection connection;
     private final ReadConverter<Request> converter;
@@ -72,7 +74,7 @@ public class MySqlRequestDao implements RequestDao {
     @Override
     public List<Request> findAll() {
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL)) {
+             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL + ORDER_BY_ID_DESC)) {
             return converter.convertToList(resultSet);
 
         } catch (SQLException e) {
@@ -140,7 +142,7 @@ public class MySqlRequestDao implements RequestDao {
         Objects.requireNonNull(email);
 
         try (PreparedStatement statement = connection
-                .prepareStatement(SQL_SELECT_ALL + WHERE_PASSENGER)) {
+                .prepareStatement(SQL_SELECT_ALL + WHERE_PASSENGER + ORDER_BY_ID_DESC)) {
 
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
