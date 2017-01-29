@@ -10,8 +10,6 @@
 
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/resources/css/auth.css">
-        <link rel="stylesheet"
-              href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
 <body>
     <jsp:include page="/WEB-INF/views/snippets/navbar.jsp" />
