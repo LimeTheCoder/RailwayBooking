@@ -31,21 +31,21 @@
 
             <c:if test="${not empty sessionScope.user_request}">
                 <div class="panel panel-success">
-                    <div class="panel-heading">Your request</div>
+                    <div class="panel-heading"><fmt:message key="your.request" /></div>
                     <div class="panel-body">
                         <div class="table">
                             <table class="table table-stripped table-bordered table-hover">
                                 <tbody>
                                 <tr>
-                                    <td>From</td>
+                                    <td><fmt:message key="request.from" /></td>
                                     <td>${sessionScope.user_request.getDeparture()}</td>
                                 </tr>
                                 <tr>
-                                    <td>To</td>
+                                    <td><fmt:message key="request.to" /></td>
                                     <td>${sessionScope.user_request.getDestination()}</td>
                                 </tr>
                                 <tr>
-                                    <td>Departure date</td>
+                                    <td><fmt:message key="request.departure.date" /></td>
                                     <td><fmt:formatDate type="date" dateStyle="long"
                                                         value="${sessionScope.user_request.getDepartureTime()}"/></td>
                                 </tr>
@@ -57,7 +57,7 @@
 
             <div class="panel-heading">
                 <div class="panel-title text-center">
-                    <h1 class="title">Results for your request</h1>
+                    <h1 class="title"><fmt:message key="request.results" /></h1>
                     <hr />
                 </div>
             </div>
@@ -66,7 +66,7 @@
             <c:if test="${empty sessionScope.user_request}">
                 <div class="panel-heading">
                     <div class="panel-title text-center">
-                        <h1 class="title">Routes schedule</h1>
+                        <h1 class="title"><fmt:message key="routes.schedule" /></h1>
                         <hr />
                     </div>
                 </div>
@@ -77,15 +77,15 @@
             <table class="table table-striped custab">
                 <thead>
                 <tr>
-                    <th>Train No</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Date</th>
-                    <th>Time, EEST</th>
-                    <th>Price</th>
-                    <th>Free places</th>
+                    <th><fmt:message key="route.train" /></th>
+                    <th><fmt:message key="request.from" /></th>
+                    <th><fmt:message key="request.to" /></th>
+                    <th><fmt:message key="route.date" /></th>
+                    <th><fmt:message key="route.time" /></th>
+                    <th><fmt:message key="route.price" /></th>
+                    <th><fmt:message key="route.free" /></th>
                     <c:if test="${not empty sessionScope.user_request}">
-                        <th>Action</th>
+                        <th><fmt:message key="route.action" /></th>
                     </c:if>
                 </tr>
                 </thead>
@@ -106,7 +106,7 @@
                             <form action="${pageContext.request.contextPath}/site/invoices/new" method="POST">
                                 <input type="hidden" name="route" value="${route.getId()}">
                                 <button type="submit" class='btn btn-info btn-xs'>
-                                    <span class="glyphicon glyphicon-plane"></span>Reserve
+                                    <span class="glyphicon glyphicon-plane"></span><fmt:message key="route.reserve" />
                                 </button>
 
                             </form>
@@ -118,7 +118,9 @@
             </table>
             </c:when>
             <c:otherwise>
-                No routes that matches your request.
+                <div class="alert alert-info">
+                    <strong><fmt:message key="info" /></strong> <fmt:message key="routes.no.matches" />
+                </div>
             </c:otherwise>
             </c:choose>
         </div>
