@@ -23,9 +23,9 @@ public class GetRoutes implements Command {
     private RequestService requestService = RequestServiceImpl.getInstance();
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response)
+    public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
-        Request userRequest = (Request) request.getSession()
+        Request userRequest = (Request) httpRequest.getSession()
                 .getAttribute(Attributes.USER_REQUEST_ATTR);
 
         List<Route> routes;
@@ -34,14 +34,19 @@ public class GetRoutes implements Command {
             routes = routeService.findByStationsAndDate(userRequest.getDeparture(),
                     userRequest.getDestination(), userRequest.getDepartureTime());
             userRequest.setResultCnt(routes.size());
-            userRequest = requestService.createRequest(userRequest);
-            request.getSession().setAttribute(Attributes.USER_REQUEST_ATTR, userRequest);
+            saveUserRequestAndAddToSession(userRequest, httpRequest);
         } else {
             routes = routeService.findAll();
         }
 
-        request.setAttribute(ROUTES_PARAM, routes);
+        httpRequest.setAttribute(ROUTES_PARAM, routes);
 
         return Views.ROUTES_VIEW;
+    }
+
+    private void saveUserRequestAndAddToSession(Request userRequest,
+                                                HttpServletRequest httpRequest) {
+        userRequest = requestService.createRequest(userRequest);
+        httpRequest.getSession().setAttribute(Attributes.USER_REQUEST_ATTR, userRequest);
     }
 }

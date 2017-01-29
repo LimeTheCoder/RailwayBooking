@@ -47,6 +47,8 @@ public class CommandHolder {
                 new PostRequestForm());
         commands.put(buildKey(PagesPaths.ROUTES_PATH, Method.GET),
                 new GetRoutes());
+        commands.put(buildKey(PagesPaths.NEW_INVOICE_PATH, Method.POST),
+                new CreateInvoiceCommand());
     }
 
     public Command getCommand(String path, Method method) {

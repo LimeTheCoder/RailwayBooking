@@ -102,8 +102,14 @@
                         <td>${route.getPrice()}$</td>
                         <td>${route.getFreePlaces()}</td>
                         <c:if test="${not empty sessionScope.user_request}">
-                            <td><a class='btn btn-info btn-xs' href="#">
-                                <span class="glyphicon glyphicon-plane"></span>Reserve</a>
+                            <td>
+                            <form action="${pageContext.request.contextPath}/site/invoices/new" method="POST">
+                                <input type="hidden" name="route" value="${route.getId()}">
+                                <button type="submit" class='btn btn-info btn-xs'>
+                                    <span class="glyphicon glyphicon-plane"></span>Reserve
+                                </button>
+
+                            </form>
                             </td>
                         </c:if>
                     </tr>

@@ -9,17 +9,13 @@ import controller.util.validator.DateValidator;
 import entity.Request;
 import entity.Station;
 import entity.User;
-import service.Impl.RequestServiceImpl;
 import service.Impl.StationServiceImpl;
-import service.RequestService;
 import service.StationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,18 +37,18 @@ public class PostRequestForm implements Command {
     private Request userRequestDto;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response)
+    public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> errors = new ArrayList<>();
-        userRequestDto = getDataFromHttpRequest(request, errors);
+        userRequestDto = getDataFromHttpRequest(httpRequest, errors);
 
         if(errors.isEmpty()) {
-            setUpUserRequestFields(request);
-            setAsAttributeAndRedirect(request, response);
+            setUpUserRequestFields(httpRequest);
+            setAsAttributeAndRedirect(httpRequest, response);
             return REDIRECTED;
         }
 
-        addInvalidDataToRequest(request, errors);
+        addInvalidDataToRequest(httpRequest, errors);
 
         return Views.REQUEST_VIEW;
     }
@@ -77,8 +73,8 @@ public class PostRequestForm implements Command {
                 .build();
     }
 
-    private void setUpUserRequestFields(HttpServletRequest request) {
-        User user = (User)request.getSession()
+    private void setUpUserRequestFields(HttpServletRequest httpRequest) {
+        User user = (User)httpRequest.getSession()
                 .getAttribute(Attributes.USER_ATTR);
         userRequestDto.setPassenger(user);
 
@@ -93,20 +89,20 @@ public class PostRequestForm implements Command {
                 .getDestination()));
     }
 
-    private void setAsAttributeAndRedirect(HttpServletRequest request,
+    private void setAsAttributeAndRedirect(HttpServletRequest httpRequest,
                                          HttpServletResponse response)
             throws IOException{
-        request.getSession().setAttribute(Attributes.USER_REQUEST_ATTR,
+        httpRequest.getSession().setAttribute(Attributes.USER_REQUEST_ATTR,
                 userRequestDto);
-        Util.redirectTo(request, response, PagesPaths.ROUTES_PATH);
+        Util.redirectTo(httpRequest, response, PagesPaths.ROUTES_PATH);
     }
 
-    private void addInvalidDataToRequest(HttpServletRequest request,
+    private void addInvalidDataToRequest(HttpServletRequest httpRequest,
                                          List<String> errors) {
         List<Station> stations = stationService.findAll();
-        request.setAttribute(Attributes.STATIONS_ATTR, stations);
+        httpRequest.setAttribute(Attributes.STATIONS_ATTR, stations);
 
-        request.setAttribute(Attributes.ERRORS_LIST, errors);
-        request.setAttribute(USER_REQUEST_PARAM, userRequestDto);
+        httpRequest.setAttribute(Attributes.ERRORS_LIST, errors);
+        httpRequest.setAttribute(USER_REQUEST_PARAM, userRequestDto);
     }
 }
