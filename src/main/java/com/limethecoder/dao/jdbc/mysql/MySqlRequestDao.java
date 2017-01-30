@@ -1,8 +1,6 @@
 package com.limethecoder.dao.jdbc.mysql;
 
-
 import com.limethecoder.dao.RequestDao;
-import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.Util;
 import com.limethecoder.dao.util.converter.ReadConverter;
 import com.limethecoder.dao.util.converter.RequestReadConverter;
@@ -13,7 +11,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlRequestDao implements RequestDao {
+public class MySqlRequestDao extends AbstractDao<Request, Long>
+        implements RequestDao {
+
     private final static String SQL_SELECT_ALL =
             "SELECT Requests.departure, Requests.destination, Requests.departure_time, " +
                     "Requests.creation_time, Requests.id, Requests.passenger, Requests.result_cnt, " +
@@ -41,124 +41,67 @@ public class MySqlRequestDao implements RequestDao {
 
     private final static String ORDER_BY_ID_DESC = " ORDER BY id DESC";
 
-    private final Connection connection;
-    private final ReadConverter<Request> converter;
-
     public MySqlRequestDao(Connection connection) {
         this(connection, new RequestReadConverter());
     }
 
-    public MySqlRequestDao(Connection connection, ReadConverter<Request> converter) {
-        this.connection = connection;
-        this.converter = converter;
+    public MySqlRequestDao(Connection connection,
+                           ReadConverter<Request> converter) {
+        super(connection, converter);
     }
 
     @Override
     public Optional<Request> findOne(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_SELECT_ALL + WHERE_ID)) {
-
-            statement.setLong(1, id);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                List<Request> requests = converter.convertToList(resultSet);
-                return Optional.ofNullable(requests.isEmpty() ? null : requests.get(0));
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Request> findAll() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL + ORDER_BY_ID_DESC)) {
-            return converter.convertToList(resultSet);
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public boolean isExist(Long id) {
-        return findOne(id).isPresent();
+        return findAll(SQL_SELECT_ALL + ORDER_BY_ID_DESC);
     }
 
     @Override
     public Request insert(Request request) {
         Objects.requireNonNull(request);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_INSERT)) {
+        long generatedId = executeInsertWithGeneratedPrimaryKey(
+                SQL_INSERT,
+                request.getDeparture().getId(),
+                request.getDestination().getId(),
+                Util.toTimestamp(request.getDepartureTime()),
+                request.getPassenger().getEmail(),
+                request.getResultCnt()
+        );
 
-            prepareStatement(statement, request);
+        request.setId(generatedId);
 
-            long id = statement.executeUpdate();
-            request.setId(id);
-
-            return request;
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return request;
     }
 
     @Override
     public void delete(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_DELETE + WHERE_ID)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Request request) {
         Objects.requireNonNull(request);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_UPDATE + WHERE_ID)) {
-
-            prepareStatement(statement, request);
-
-            statement.setLong(6, request.getId());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(
+                SQL_UPDATE + WHERE_ID,
+                request.getDeparture().getId(),
+                request.getDestination().getId(),
+                Util.toTimestamp(request.getDepartureTime()),
+                request.getPassenger().getEmail(),
+                request.getResultCnt(),
+                request.getId()
+        );
     }
 
     @Override
     public List<Request> findAllByPassenger(String email) {
         Objects.requireNonNull(email);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_SELECT_ALL + WHERE_PASSENGER + ORDER_BY_ID_DESC)) {
-
-            statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-
-            return converter.convertToList(resultSet);
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    private void prepareStatement(PreparedStatement statement, Request request)
-            throws SQLException {
-        statement.setLong(1, request.getDeparture().getId());
-        statement.setLong(2, request.getDestination().getId());
-        statement.setTimestamp(3, Util.toTimestamp(request.getDepartureTime()));
-        statement.setString(4, request.getPassenger().getEmail());
-        statement.setInt(5, request.getResultCnt());
+        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER + ORDER_BY_ID_DESC, email);
     }
 }

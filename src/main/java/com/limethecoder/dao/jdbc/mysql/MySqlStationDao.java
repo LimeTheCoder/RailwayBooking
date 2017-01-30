@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlStationDao implements StationDao {
+public class MySqlStationDao extends AbstractDao<Station, Long>
+        implements StationDao {
+
     private final static String SQL_SELECT_ALL =
             " SELECT * FROM Stations ";
     private final static String SQL_INSERT =
@@ -23,102 +25,56 @@ public class MySqlStationDao implements StationDao {
 
     private final static String WHERE_ID = " WHERE id = ?";
 
-    private final Connection connection;
-    private final ReadConverter<Station> converter;
-
     public MySqlStationDao(Connection connection) {
         this(connection, new StationReadConverter());
     }
 
-    public MySqlStationDao(Connection connection, ReadConverter<Station> converter) {
-        this.connection = connection;
-        this.converter = converter;
+    public MySqlStationDao(Connection connection,
+                           ReadConverter<Station> converter) {
+        super(connection, converter);
     }
 
     @Override
     public Optional<Station> findOne(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_SELECT_ALL + WHERE_ID)) {
-
-            statement.setLong(1, id);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                List<Station> stationList = converter.convertToList(resultSet);
-                return Optional.ofNullable(stationList.isEmpty() ? null : stationList.get(0));
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Station> findAll() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL)) {
-            return converter.convertToList(resultSet);
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public boolean isExist(Long id) {
-        return findOne(id).isPresent();
+        return findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public Station insert(Station station) {
         Objects.requireNonNull(station);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_INSERT)) {
+        long generatedId = executeInsertWithGeneratedPrimaryKey(
+                SQL_INSERT,
+                station.getName(),
+                station.getCity(),
+                station.getCountry()
+        );
 
-            statement.setString(1, station.getName());
-            statement.setString(2, station.getCity());
-            statement.setString(3, station.getCountry());
+        station.setId(generatedId);
 
-            long id = statement.executeUpdate();
-            station.setId(id);
-
-            return station;
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return station;
     }
 
     @Override
     public void delete(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_DELETE + WHERE_ID)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Station station) {
         Objects.requireNonNull(station);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_UPDATE + WHERE_ID)) {
-
-            statement.setString(1, station.getName());
-            statement.setString(2, station.getCity());
-            statement.setString(3, station.getCountry());
-            statement.setLong(4, station.getId());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(
+                SQL_UPDATE + WHERE_ID,
+                station.getName(),
+                station.getCity(),
+                station.getCountry(),
+                station.getId()
+        );
     }
 }

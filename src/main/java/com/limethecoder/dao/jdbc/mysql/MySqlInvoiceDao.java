@@ -1,7 +1,6 @@
 package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.InvoiceDao;
-import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.InvoiceReadConverter;
 import com.limethecoder.dao.util.converter.ReadConverter;
 import com.limethecoder.entity.Invoice;
@@ -12,7 +11,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlInvoiceDao implements InvoiceDao {
+public class MySqlInvoiceDao extends AbstractDao<Invoice, Long>
+        implements InvoiceDao {
+
     private final static String SQL_SELECT_ALL =
             "SELECT Invoices.id, Invoices.status, " +
                     "r.departure_station AS rt_departure_station, " +
@@ -56,126 +57,66 @@ public class MySqlInvoiceDao implements InvoiceDao {
             " WHERE (SELECT passenger FROM Requests WHERE Requests.id = request) = ?";
     private final static String WHERE_ROUTE_ID = " WHERE route = ?";
 
-    private final Connection connection;
-    private final ReadConverter<Invoice> converter;
-
     public MySqlInvoiceDao(Connection connection) {
         this(connection, new InvoiceReadConverter());
     }
 
     public MySqlInvoiceDao(Connection connection,
                            ReadConverter<Invoice> converter) {
-        this.connection = connection;
-        this.converter = converter;
+        super(connection, converter);
     }
 
     @Override
     public Optional<Invoice> findOne(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_SELECT_ALL + WHERE_ID)) {
-
-            statement.setLong(1, id);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                List<Invoice> invoices = converter.convertToList(resultSet);
-                return Optional.ofNullable(invoices.isEmpty() ? null : invoices.get(0));
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Invoice> findAll() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL)) {
-            return converter.convertToList(resultSet);
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return findAll(SQL_SELECT_ALL);
     }
 
     @Override
-    public boolean isExist(Long id) {
-        return findOne(id).isPresent();
+    public List<Invoice> findAllByPassenger(Long passengerId) {
+        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerId);
+    }
+
+    @Override
+    public List<Invoice> findAllByRoute(Long routeId) {
+        return findAll(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
     }
 
     @Override
     public Invoice insert(Invoice invoice) {
         Objects.requireNonNull(invoice);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_INSERT)) {
+        long generatedId = executeInsertWithGeneratedPrimaryKey(
+                SQL_INSERT,
+                invoice.getRequest().getId(),
+                invoice.getRoute().getId(),
+                invoice.getStatus().name()
+        );
 
-            statement.setLong(1, invoice.getRequest().getId());
-            statement.setLong(2, invoice.getRoute().getId());
-            statement.setString(3, invoice.getStatus().name());
+        invoice.setId(generatedId);
 
-            long id = statement.executeUpdate();
-            invoice.setId(id);
-
-            return invoice;
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return invoice;
     }
 
     @Override
     public void delete(Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_DELETE + WHERE_ID)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Invoice invoice) {
         Objects.requireNonNull(invoice);
 
-        try (PreparedStatement statement = connection
-                .prepareStatement(SQL_UPDATE + WHERE_ID)) {
-
-            statement.setLong(1, invoice.getRequest().getId());
-            statement.setLong(2, invoice.getRoute().getId());
-            statement.setString(3, invoice.getStatus().name());
-            statement.setLong(4, invoice.getId());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public List<Invoice> findAllByPassenger(Long passengerId) {
-        return findAllWithID(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerId);
-    }
-
-    @Override
-    public List<Invoice> findAllByRoute(Long routeId) {
-        return findAllWithID(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
-    }
-
-    private List<Invoice> findAllWithID(String query, Long id) {
-        Objects.requireNonNull(id);
-
-        try (PreparedStatement statement = connection
-                .prepareStatement(query)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            return converter.convertToList(resultSet);
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(
+                SQL_UPDATE + WHERE_ID,
+                invoice.getRequest().getId(),
+                invoice.getRoute().getId(),
+                invoice.getStatus().name(),
+                invoice.getId()
+        );
     }
 }
