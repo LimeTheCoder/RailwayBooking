@@ -17,7 +17,7 @@ public class DefaultCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        logger.debug("Default command on " + request.getRequestURI());
+        logger.info("Default command on " + request.getRequestURI());
         Util.redirectTo(request, response, PagesPaths.HOME_PATH);
         return REDIRECTED;
     }

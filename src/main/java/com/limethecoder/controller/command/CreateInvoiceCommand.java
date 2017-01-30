@@ -25,18 +25,18 @@ public class CreateInvoiceCommand implements Command {
     private RouteService routeService = RouteServiceImpl.getInstance();
     private InvoiceService invoiceService = InvoiceServiceImpl.getInstance();
 
+    private Request userRequest;
+    private Optional<Route> routeOptional;
+
     @Override
     public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
 
         if(isUserRequestInSession(httpRequest)) {
-            Request userRequest = (Request) httpRequest.getSession()
-                    .getAttribute(Attributes.USER_REQUEST_ATTR);
-            long routeId = Long.valueOf(httpRequest.getParameter(ROUTE_PARAM));
-            Optional<Route> route = routeService.findById(routeId);
+            getUserRequestAndRouteFromRequest(httpRequest);
 
-            if(route.isPresent()) {
-                createNewInvoice(route.get(), userRequest);
+            if(routeOptional.isPresent()) {
+                createNewInvoice(routeOptional.get(), userRequest);
                 removeAttributesFromSession(httpRequest.getSession());
                 Util.redirectTo(httpRequest, response, PagesPaths.REQUESTS_HISTORY_PATH);
 
@@ -46,6 +46,13 @@ public class CreateInvoiceCommand implements Command {
 
         Util.redirectTo(httpRequest, response, PagesPaths.HOME_PATH);
         return REDIRECTED;
+    }
+
+    private void getUserRequestAndRouteFromRequest(HttpServletRequest httpRequest) {
+        userRequest = (Request) httpRequest.getSession()
+                .getAttribute(Attributes.USER_REQUEST_ATTR);
+        long routeId = Long.valueOf(httpRequest.getParameter(ROUTE_PARAM));
+        routeOptional = routeService.findById(routeId);
     }
 
     private boolean isUserRequestInSession(HttpServletRequest request) {

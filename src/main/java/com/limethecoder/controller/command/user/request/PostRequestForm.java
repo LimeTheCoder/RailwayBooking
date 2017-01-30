@@ -47,16 +47,14 @@ public class PostRequestForm implements Command {
     @Override
     public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
-        List<String> errors = new ArrayList<>();
-        userRequestDto = getDataFromHttpRequest(httpRequest, errors);
+        List<String> errors = getUserRequestFromHttpRequest(httpRequest);
 
         if(errors.isEmpty()) {
-            routes = routeService.findByStationsAndDate(userRequestDto.getDeparture(),
-                    userRequestDto.getDestination(), userRequestDto.getDepartureTime());
-
+            loadRoutesWhichMatchRequest();
             setUpUserRequestFields(httpRequest);
-            saveUserRequestAndRedirect(httpRequest, response);
-            setAsSessionAttributes(httpRequest);
+            saveUserRequest();
+            setRequestAndRoutesAsSessionAttributes(httpRequest);
+            Util.redirectTo(httpRequest, response, PagesPaths.ROUTES_PATH);
 
             return REDIRECTED;
         }
@@ -66,10 +64,12 @@ public class PostRequestForm implements Command {
         return Views.REQUEST_VIEW;
     }
 
-    private Request getDataFromHttpRequest(HttpServletRequest httpRequest, List<String> errors) {
+    private List<String> getUserRequestFromHttpRequest(HttpServletRequest httpRequest) {
         long departureId = Long.valueOf(httpRequest.getParameter(FROM_PARAM));
         long destinationId = Long.valueOf(httpRequest.getParameter(TO_PARAM));
         String departureDate = httpRequest.getParameter(DEP_DATE_PARAM);
+
+        List<String> errors = new ArrayList<>();
 
         if(departureId == destinationId) {
             errors.add(ERROR_EQUAL_STATION);
@@ -79,11 +79,18 @@ public class PostRequestForm implements Command {
             errors.add(dateValidator.getErrorKey());
         }
 
-        return Request.newBuilder()
+        userRequestDto = Request.newBuilder()
                 .setDeparture(new Station(departureId))
                 .setDestination(new Station(destinationId))
                 .setDepartureTime(dateValidator.getParsedDate())
                 .build();
+
+        return errors;
+    }
+
+    private void loadRoutesWhichMatchRequest() {
+        routes = routeService.findByStationsAndDate(userRequestDto.getDeparture(),
+                userRequestDto.getDestination(), userRequestDto.getDepartureTime());
     }
 
     private void setUpUserRequestFields(HttpServletRequest httpRequest) {
@@ -103,7 +110,7 @@ public class PostRequestForm implements Command {
         userRequestDto.setResultCnt(routes.size());
     }
 
-    private void setAsSessionAttributes(HttpServletRequest httpRequest)
+    private void setRequestAndRoutesAsSessionAttributes(HttpServletRequest httpRequest)
             throws IOException{
         httpRequest.getSession().setAttribute(Attributes.USER_REQUEST_ATTR,
                 userRequestDto);
@@ -120,10 +127,7 @@ public class PostRequestForm implements Command {
         httpRequest.setAttribute(USER_REQUEST_PARAM, userRequestDto);
     }
 
-    private void saveUserRequestAndRedirect(HttpServletRequest httpRequest,
-                                            HttpServletResponse response)
-            throws IOException {
+    private void saveUserRequest() {
         userRequestDto = requestService.createRequest(userRequestDto);
-        Util.redirectTo(httpRequest, response, PagesPaths.ROUTES_PATH);
     }
 }
