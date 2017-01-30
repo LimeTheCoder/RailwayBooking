@@ -42,7 +42,7 @@
                         <li>
                     </c:otherwise>
                 </c:choose>
-                <a href="${pageContext.request.contextPath}/site/request">
+                <a href="${pageContext.request.contextPath}/site/user/request">
                     <fmt:message key="menu.request" />
                 </a>
             </li>

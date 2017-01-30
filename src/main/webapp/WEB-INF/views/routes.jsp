@@ -103,7 +103,7 @@
                         <td>${route.getFreePlaces()}</td>
                         <c:if test="${not empty sessionScope.user_request}">
                             <td>
-                            <form action="${pageContext.request.contextPath}/site/invoices/new" method="POST">
+                            <form action="${pageContext.request.contextPath}/site/user/invoices/new" method="POST">
                                 <input type="hidden" name="route" value="${route.getId()}">
                                 <button type="submit" class='btn btn-info btn-xs'>
                                     <span class="glyphicon glyphicon-plane"></span><fmt:message key="route.reserve" />

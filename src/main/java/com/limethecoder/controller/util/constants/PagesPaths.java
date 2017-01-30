@@ -8,6 +8,7 @@ public interface PagesPaths {
     String LOGOUT_PATH = "/logout";
     String ROUTES_PATH = "/routes";
     String REQUESTS_HISTORY_PATH = "/user/history";
-    String REQUEST_PATH = "/request";
-    String NEW_INVOICE_PATH = "/invoices/new";
+    String REQUEST_PATH = "/user/request";
+    String NEW_INVOICE_PATH = "/user/invoices/new";
+    String INVOICES_PATH = "/user/invoices";
 }

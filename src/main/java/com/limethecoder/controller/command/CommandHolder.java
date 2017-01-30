@@ -2,6 +2,9 @@ package com.limethecoder.controller.command;
 
 
 import com.limethecoder.controller.command.authentication.*;
+import com.limethecoder.controller.command.user.GetRoutes;
+import com.limethecoder.controller.command.user.invoice.CreateInvoiceCommand;
+import com.limethecoder.controller.command.user.invoice.GetInvoices;
 import com.limethecoder.controller.command.user.request.GetRequestForm;
 import com.limethecoder.controller.command.user.request.GetRequestsHistory;
 import com.limethecoder.controller.command.user.request.PostRequestForm;
@@ -49,6 +52,8 @@ public class CommandHolder {
                 new GetRoutes());
         commands.put(buildKey(PagesPaths.NEW_INVOICE_PATH, Method.POST),
                 new CreateInvoiceCommand());
+        commands.put(buildKey(PagesPaths.INVOICES_PATH, Method.GET),
+                new GetInvoices());
     }
 
     public Command getCommand(String path, Method method) {

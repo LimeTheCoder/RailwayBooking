@@ -33,10 +33,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> findAllByPassenger(long passengerId) {
+    public List<Invoice> findAllByPassenger(String email) {
         try(DaoConnection connection = daoFactory.getConnection()) {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
-            return invoiceDao.findAllByPassenger(passengerId);
+            return invoiceDao.findAllByPassenger(email);
         }
     }
 

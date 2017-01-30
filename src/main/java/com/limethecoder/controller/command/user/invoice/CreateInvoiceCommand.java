@@ -1,6 +1,7 @@
-package com.limethecoder.controller.command;
+package com.limethecoder.controller.command.user.invoice;
 
 
+import com.limethecoder.controller.command.Command;
 import com.limethecoder.controller.util.Util;
 import com.limethecoder.controller.util.constants.Attributes;
 import com.limethecoder.controller.util.constants.PagesPaths;

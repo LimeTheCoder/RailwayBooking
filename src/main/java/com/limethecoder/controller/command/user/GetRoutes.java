@@ -1,6 +1,7 @@
-package com.limethecoder.controller.command;
+package com.limethecoder.controller.command.user;
 
 
+import com.limethecoder.controller.command.Command;
 import com.limethecoder.controller.util.constants.Attributes;
 import com.limethecoder.controller.util.constants.Views;
 import com.limethecoder.entity.Request;

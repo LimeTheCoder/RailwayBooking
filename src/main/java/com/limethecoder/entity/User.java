@@ -63,6 +63,11 @@ public class User {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return name + " " + surname;
+    }
+
     public String getEmail() {
         return email;
     }

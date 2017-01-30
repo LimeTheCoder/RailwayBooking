@@ -77,8 +77,8 @@ public class MySqlInvoiceDao extends AbstractDao<Invoice, Long>
     }
 
     @Override
-    public List<Invoice> findAllByPassenger(Long passengerId) {
-        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerId);
+    public List<Invoice> findAllByPassenger(String passengerEmail) {
+        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerEmail);
     }
 
     @Override
