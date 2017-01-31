@@ -123,6 +123,18 @@
                 </div>
             </c:otherwise>
             </c:choose>
+            <c:if test="${not empty sessionScope.user_request}">
+                <form method="POST" action="${pageContext.request.contextPath}/site/user/request/invalidate">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary" name="invalidate">
+                                <fmt:message key="button.request.invalidate" />
+                            </button>
+                        </div>
+                        <div class="col-md-9"></div>
+                    </div>
+                </form>
+            </c:if>
         </div>
     </div>
 

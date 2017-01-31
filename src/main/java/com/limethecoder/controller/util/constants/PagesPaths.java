@@ -15,6 +15,7 @@ public interface PagesPaths {
 
     String REQUESTS_HISTORY_PATH = USER_PREFIX + "/history";
     String REQUEST_PATH = USER_PREFIX + "/request";
+    String REQUEST_INVALIDATE_PATH = USER_PREFIX + "/request/invalidate";
     String NEW_INVOICE_PATH = USER_PREFIX + "/invoices/new";
     String INVOICES_PATH = USER_PREFIX + "/invoices";
 

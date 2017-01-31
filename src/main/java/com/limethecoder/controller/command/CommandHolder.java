@@ -8,6 +8,7 @@ import com.limethecoder.controller.command.user.invoice.CreateInvoiceCommand;
 import com.limethecoder.controller.command.user.invoice.GetInvoices;
 import com.limethecoder.controller.command.user.request.GetRequestForm;
 import com.limethecoder.controller.command.user.request.GetRequestsHistory;
+import com.limethecoder.controller.command.user.request.PostInvalidateUserRequest;
 import com.limethecoder.controller.command.user.request.PostRequestForm;
 import com.limethecoder.controller.util.constants.PagesPaths;
 
@@ -51,6 +52,8 @@ public class CommandHolder {
                 new PostRequestForm());
         commands.put(buildKey(PagesPaths.ROUTES_PATH, Method.GET),
                 new GetRoutes());
+        commands.put(buildKey(PagesPaths.REQUEST_INVALIDATE_PATH, Method.POST),
+                new PostInvalidateUserRequest());
         commands.put(buildKey(PagesPaths.NEW_INVOICE_PATH, Method.POST),
                 new CreateInvoiceCommand());
         commands.put(buildKey(PagesPaths.INVOICES_PATH, Method.GET),
