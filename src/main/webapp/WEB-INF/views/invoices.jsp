@@ -19,7 +19,7 @@
     <div class="container">
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">Invoices</h1>
+                <h1 class="title"><fmt:message key="invoices.title" /></h1>
                 <hr />
             </div>
         </div>
@@ -43,26 +43,30 @@
                         </div>
                         <div class="offer-content">
                             <h3 class="lead">
-                                Invoice #<c:out value="${invoice.getId()}" />
+                                <fmt:message key="invoice.no" /><c:out value="${invoice.getId()}" />
                             </h3>
                             <div class='col-md-12'>
-                                <p>Passenger: <c:out value="${invoice.getRequest().getPassenger()}" /></p>
-                                <p>Status: <c:out value="${invoice.getStatus()}" /></p>
-                                <p>Destination: <c:out value="${invoice.getRoute().getDestination()}" /></p>
-                                <p>Departure: <c:out value="${invoice.getRoute().getDeparture()}" /></p>
-                                <p>Price: <c:out value="${invoice.getRoute().getPrice()}" /></p>
-                                <p>Departure time: <c:out value="${invoice.getRoute().getDepartureTime()}" /></p>
-                                <p>Creation time:
-                                    <c:out value="${invoice.getRequest().getCreationTime()}" />
+                                <p><fmt:message key="invoice.passenger" />: <c:out value="${invoice.getRequest().getPassenger()}" /></p>
+                                <p><fmt:message key="invoice.status" />: <c:out value="${invoice.getStatus()}" /></p>
+                                <p><fmt:message key="invoice.departure" />: <c:out value="${invoice.getRoute().getDeparture()}" /></p>
+                                <p><fmt:message key="invoice.destination" />: <c:out value="${invoice.getRoute().getDestination()}" /></p>
+                                <p><fmt:message key="route.price" />: <c:out value="${invoice.getRoute().getPrice()}" /></p>
+                                <p><fmt:message key="invoice.departure.time" />:
+                                    <fmt:formatDate type="both" dateStyle="medium"
+                                                    value="${invoice.getRoute().getDepartureTime()}"/></p>
+                                <p><fmt:message key="invoice.creation.time" />:
+                                    <fmt:formatDate type="both" dateStyle="medium" value="${invoice.getRequest().getCreationTime()}" />
                                 </p>
                                 <c:if test="${sessionScope.user.isAdmin()}">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <button type="button" class="btn btn-success">Submit</button>
+                                            <button type="button" class="btn btn-success">
+                                                <fmt:message key="button.submit" />
+                                            </button>
                                         </div>
                                         <div class="col-md-5"></div>
                                         <div class="col-md-3">
-                                            <button type="button" class="btn btn-danger">Reject</button>
+                                            <button type="button" class="btn btn-danger"><fmt:message key="button.reject" /></button>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
