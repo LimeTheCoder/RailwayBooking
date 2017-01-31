@@ -120,20 +120,23 @@ DELIMITER $
 CREATE TRIGGER inc_reserved_cnt
 	BEFORE INSERT ON Invoices FOR EACH ROW
     BEGIN
-		DECLARE train_id VARCHAR(10);
-    DECLARE cnt INT(10);
+      DECLARE train_id VARCHAR(10);
+      DECLARE cnt INT(10);
 
-    SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
-    SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
+    IF NEW.status <> 'REJECTED'
+    THEN
+      SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
+      SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
 
-		IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
-		THEN
-		SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
-		ELSE
-			UPDATE Routes
-            SET reserved_cnt = reserved_cnt + 1
-            WHERE id = NEW.route;
+      IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
+      THEN
+        SIGNAL SQLSTATE '45000'
+          SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
+      ELSE
+        UPDATE Routes
+              SET reserved_cnt = reserved_cnt + 1
+              WHERE id = NEW.route;
+      END IF;
 		END IF;
     END$
 
@@ -146,11 +149,50 @@ DELIMITER $
 CREATE TRIGGER dec_reserved_cnt
 	BEFORE DELETE ON Invoices FOR EACH ROW
     BEGIN
+    IF OLD.status <> 'REJECTED'
+    THEN
+      UPDATE Routes
+      SET reserved_cnt = reserved_cnt - 1
+      WHERE id = OLD.route;
+    END IF;
 
-    UPDATE Routes
-    SET reserved_cnt = reserved_cnt - 1
-    WHERE id = OLD.route;
+  END$
 
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS update_reserved_cnt;
+
+DELIMITER $
+
+CREATE TRIGGER update_reserved_cnt
+	BEFORE UPDATE ON Invoices FOR EACH ROW
+    BEGIN
+      DECLARE train_id VARCHAR(10);
+      DECLARE cnt INT(10);
+
+    IF OLD.status = 'REJECTED' and NEW.status <> 'REJECTED'
+    THEN
+      SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
+      SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
+
+      IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
+      THEN
+        SIGNAL SQLSTATE '45000'
+          SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
+      ELSE
+        UPDATE Routes
+              SET reserved_cnt = reserved_cnt + 1
+              WHERE id = NEW.route;
+      END IF;
+
+    END IF;
+
+    IF OLD.status <> 'REJECTED' and NEW.status = 'REJECTED'
+      THEN
+        UPDATE Routes
+        SET reserved_cnt = reserved_cnt - 1
+        WHERE id = OLD.route;
+      END IF;
   END$
 
 DELIMITER ;
@@ -187,27 +229,24 @@ INSERT INTO Trains(serial_no, capacity) VALUES('M6209-19', 13);
 INSERT INTO Trains(serial_no, capacity) VALUES('L6309-50', 50);
 
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(1, 4, '2016-08-03 06:10:00', '2016-08-03 18:45:00', 'S6108-19', 500);
+VALUES(1, 4, '2017-02-08 06:10:00', '2017-02-08 18:45:00', 'S6108-19', 500);
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(3, 6, '2016-08-04 16:15:00', '2016-08-04 23:40:00', 'M6109-21', 125);
+VALUES(3, 6, '2017-02-04 16:15:00', '2017-02-04 23:40:00', 'M6109-21', 125);
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(1, 4, '2016-08-03 12:30:00', '2016-08-03 20:50:00', 'M6209-19', 250);
+VALUES(1, 4, '2017-02-05 12:30:00', '2017-02-05 20:50:00', 'M6209-19', 250);
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(5, 8, '2016-08-04 13:10:00', '2016-08-04 18:20:00', 'L6309-50', 90);
+VALUES(5, 8, '2017-02-04 13:10:00', '2017-02-04 18:20:00', 'L6309-50', 90);
 
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
-VALUES('test@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+VALUES('test@gmail.com', 1, 4, '2017-02-06 00:00:00', 1);
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
-VALUES('test2@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+VALUES('test3@gmail.com', 1, 4, '2017-02-04 00:00:00', 2);
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
-VALUES('test3@gmail.com', 1, 4, '2016-08-03 00:00:00', 3);
+VALUES('test2@gmail.com', 3, 6, '2017-02-04 00:00:00', 1);
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
-VALUES('test2@gmail.com', 3, 6, '2016-08-04 00:00:00', 1);
-INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
-VALUES('test3@gmail.com', 5, 8, '2016-08-04 00:00:00', 1);
+VALUES('test3@gmail.com', 5, 8, '2017-02-04 00:00:00', 1);
 
-INSERT INTO Invoices(request, route) VALUES(1, 1);
-INSERT INTO Invoices(request, route) VALUES(2, 1);
-INSERT INTO Invoices(request, route) VALUES(3, 1);
-INSERT INTO Invoices(request, route) VALUES(4, 2);
-INSERT INTO Invoices(request, route) VALUES(5, 4);
+INSERT INTO Invoices(request, route, status) VALUES(1, 1, 'PENDING');
+INSERT INTO Invoices(request, route, status) VALUES(2, 1, 'PAID');
+INSERT INTO Invoices(request, route, status) VALUES(3, 2, 'PENDING');
+INSERT INTO Invoices(request, route, status) VALUES(4, 4, 'PENDING');
