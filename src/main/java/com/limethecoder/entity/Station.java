@@ -13,39 +13,29 @@ public class Station {
     }
 
     public static class Builder {
-        private long id;
-        private String name;
-        private String city;
-        private String country;
+        private final Station station = new Station();
 
         public Builder setId(long id) {
-            this.id = id;
+            station.setId(id);
             return this;
         }
 
         public Builder setName(String name) {
-            this.name = name;
+            station.setName(name);
             return this;
         }
 
         public Builder setCity(String city) {
-            this.city = city;
+            station.setCity(city);
             return this;
         }
 
         public Builder setCountry(String country) {
-            this.country = country;
+            station.setCountry(country);
             return this;
         }
 
         public Station build() {
-            Station station = new Station();
-
-            station.setId(id);
-            station.setCity(city);
-            station.setCountry(country);
-            station.setName(name);
-
             return station;
         }
     }
@@ -89,5 +79,20 @@ public class Station {
     @Override
     public String toString() {
         return name + ", " + city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Station station = (Station) o;
+
+        return id == station.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

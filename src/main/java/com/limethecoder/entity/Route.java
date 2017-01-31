@@ -14,67 +14,49 @@ public class Route {
     private int price;
 
     public static class Builder {
-        private long id;
-        private Station departure;
-        private Station destination;
-        private Date departureTime;
-        private Date destinationTime;
-        private Train train;
-        private int price;
-        private int reservedCnt;
+        private final Route route = new Route();
 
         public Builder setId(long id) {
-            this.id = id;
+            route.setId(id);
             return this;
         }
 
         public Builder setDeparture(Station departure) {
-            this.departure = departure;
+            route.setDeparture(departure);
             return this;
         }
 
         public Builder setDestination(Station destination) {
-            this.destination = destination;
+            route.setDestination(destination);
             return this;
         }
 
         public Builder setDepartureTime(Date departureTime) {
-            this.departureTime = departureTime;
+            route.setDepartureTime(departureTime);
             return this;
         }
 
         public Builder setDestinationTime(Date destinationTime) {
-            this.destinationTime = destinationTime;
+            route.setDestinationTime(destinationTime);
             return this;
         }
 
         public Builder setTrain(Train train) {
-            this.train = train;
+            route.setTrain(train);
             return this;
         }
 
         public Builder setReservedCnt(int reservedCnt) {
-            this.reservedCnt = reservedCnt;
+            route.setReservedCnt(reservedCnt);
             return this;
         }
 
         public Builder setPrice(int price) {
-            this.price = price;
+            route.setPrice(price);
             return this;
         }
 
         public Route build() {
-            Route route = new Route();
-
-            route.setId(id);
-            route.setDeparture(departure);
-            route.setDestination(destination);
-            route.setDepartureTime(departureTime);
-            route.setDestinationTime(destinationTime);
-            route.setPrice(price);
-            route.setTrain(train);
-            route.setReservedCnt(reservedCnt);
-
             return route;
         }
     }

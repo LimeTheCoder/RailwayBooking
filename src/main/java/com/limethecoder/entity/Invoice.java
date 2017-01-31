@@ -13,37 +13,29 @@ public class Invoice {
     private Status status;
 
     public static class Builder {
-        private long id;
-        private Request request;
-        private Route route;
-        private Status status;
+        private final Invoice invoice = new Invoice();
 
         public Builder setId(long id) {
-            this.id = id;
+            invoice.setId(id);
             return this;
         }
 
         public Builder setRequest(Request request) {
-            this.request = request;
+            invoice.setRequest(request);
             return this;
         }
 
         public Builder setRoute(Route route) {
-            this.route = route;
+            invoice.setRoute(route);
             return this;
         }
 
         public Builder setStatus(Status status) {
-            this.status = status;
+            invoice.setStatus(status);
             return this;
         }
 
         public Invoice build() {
-            Invoice invoice = new Invoice();
-            invoice.setId(id);
-            invoice.setRequest(request);
-            invoice.setStatus(status);
-            invoice.setRoute(route);
             return invoice;
         }
     }

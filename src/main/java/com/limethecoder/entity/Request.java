@@ -13,58 +13,44 @@ public class Request {
     private int resultCnt;
 
     public static class Builder {
-        private long id;
-        private User passenger;
-        private Station departure;
-        private Station destination;
-        private Date departureTime;
-        private Date creationTime;
-        private int resultCnt;
+        private final Request request = new Request();
 
         public Builder setId(long id) {
-            this.id = id;
+            request.setId(id);
             return this;
         }
 
         public Builder setPassenger(User passenger) {
-            this.passenger = passenger;
+            request.setPassenger(passenger);
             return this;
         }
 
         public Builder setDeparture(Station departure) {
-            this.departure = departure;
+            request.setDeparture(departure);
             return this;
         }
 
         public Builder setDestination(Station destination) {
-            this.destination = destination;
+            request.setDestination(destination);
             return this;
         }
 
         public Builder setDepartureTime(Date departureTime) {
-            this.departureTime = departureTime;
+            request.setDepartureTime(departureTime);
             return this;
         }
 
         public Builder setCreationTime(Date creationTime) {
-            this.creationTime = creationTime;
+            request.setCreationTime(creationTime);
             return this;
         }
 
         public Builder setResultCnt(int resultCnt) {
-            this.resultCnt = resultCnt;
+            request.setResultCnt(resultCnt);
             return this;
         }
 
         public Request build() {
-            Request request = new Request();
-            request.setId(id);
-            request.setCreationTime(creationTime);
-            request.setDeparture(departure);
-            request.setDestination(destination);
-            request.setDepartureTime(departureTime);
-            request.setPassenger(passenger);
-            request.setResultCnt(resultCnt);
             return request;
         }
     }
