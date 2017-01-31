@@ -50,6 +50,8 @@ public class MySqlInvoiceDao implements InvoiceDao {
     private final static String SQL_DELETE = "DELETE FROM Invoices";
     private final static String SQL_UPDATE =
             "UPDATE Invoices SET request = ?, route = ?, status = ? ";
+    private final static String SQL_UPDATE_STATUS =
+            "UPDATE Invoices SET status = ? ";
 
     private final static String WHERE_ID = " WHERE Invoices.id = ?";
     private final static String WHERE_PASSENGER_ID =
@@ -98,6 +100,15 @@ public class MySqlInvoiceDao implements InvoiceDao {
     @Override
     public List<Invoice> findAllByStatus(Invoice.Status status) {
         return jdbcTemplate.findAll(SQL_SELECT_ALL + WHERE_STATUS, status.name());
+    }
+
+    @Override
+    public void updateInvoiceStatus(Long id, Invoice.Status status) {
+        jdbcTemplate.executeUpdate(
+                SQL_UPDATE_STATUS + WHERE_ID,
+                status.name(),
+                id
+        );
     }
 
     @Override

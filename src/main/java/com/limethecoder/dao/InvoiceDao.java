@@ -9,4 +9,5 @@ public interface InvoiceDao extends GenericDao<Invoice, Long> {
     List<Invoice> findAllByPassenger(String passengerEmail);
     List<Invoice> findAllByRoute(Long routeId);
     List<Invoice> findAllByStatus(Invoice.Status status);
+    void updateInvoiceStatus(Long id, Invoice.Status status);
 }

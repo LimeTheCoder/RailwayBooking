@@ -71,4 +71,20 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceDao.delete(id);
         }
     }
+
+    @Override
+    public void rejectInvoice(long id) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
+            invoiceDao.updateInvoiceStatus(id, Invoice.Status.REJECTED);
+        }
+    }
+
+    @Override
+    public void submitInvoice(long id) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
+            invoiceDao.updateInvoiceStatus(id, Invoice.Status.PAID);
+        }
+    }
 }

@@ -58,18 +58,23 @@
                                     <fmt:formatDate type="both" dateStyle="medium" value="${invoice.getRequest().getCreationTime()}" />
                                 </p>
                                 <c:if test="${sessionScope.user.isAdmin()}">
+                                <form method="POST">
                                     <div class="row">
+                                        <input type="hidden" name="invoice" value="${invoice.getId()}">
                                         <div class="col-md-3">
-                                            <button type="button" class="btn btn-success">
+                                            <button type="submit" class="btn btn-success" name="submit">
                                                 <fmt:message key="button.submit" />
                                             </button>
                                         </div>
                                         <div class="col-md-5"></div>
                                         <div class="col-md-3">
-                                            <button type="button" class="btn btn-danger"><fmt:message key="button.reject" /></button>
+                                            <button type="submit" class="btn btn-danger" name="reject">
+                                                <fmt:message key="button.reject" />
+                                            </button>
                                         </div>
                                         <div class="col-md-1"></div>
                                     </div>
+                                </form>
                                     <p></p>
                                 </c:if>
                             </div>
