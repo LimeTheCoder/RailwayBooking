@@ -28,11 +28,6 @@ public class GetInvoices implements Command {
         User user = (User)request.getSession()
                 .getAttribute(Attributes.USER_ATTR);
 
-        if(user == null) {
-            Util.redirectTo(request, response, PagesPaths.HOME_PATH);
-            return REDIRECTED;
-        }
-
         List<Invoice> invoices = invoiceService.findAllByPassenger(user.getEmail());
         request.setAttribute(INVOICES_PARAM, invoices);
 

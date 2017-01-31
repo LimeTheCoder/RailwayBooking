@@ -40,4 +40,14 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
+    <filter>
+        <filter-name>auth</filter-name>
+        <filter-class>com.limethecoder.controller.util.filters.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>auth</filter-name>
+        <url-pattern>/site/user/*</url-pattern>
+        <url-pattern>/site/admin/*</url-pattern>
+    </filter-mapping>
+
 </web-app>

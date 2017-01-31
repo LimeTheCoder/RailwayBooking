@@ -4,6 +4,7 @@ import com.limethecoder.controller.command.Command;
 import com.limethecoder.controller.command.CommandHolder;
 import com.limethecoder.controller.command.CommandHolder.Method;
 import com.limethecoder.controller.i18n.SupportedLocale;
+import com.limethecoder.controller.util.constants.PagesPaths;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -18,8 +19,6 @@ import java.io.IOException;
  * @author Taras Sakharchuk
  */
 public class FrontController extends HttpServlet {
-
-    private final static String PREFIX = ".*/site";
     private final static String SUPPORTED_LOCALES = "supportedLocales";
 
     private CommandHolder commandHolder;
@@ -63,6 +62,6 @@ public class FrontController extends HttpServlet {
 
     private String getPath(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return uri.replaceAll(PREFIX, "");
+        return uri.replaceAll(PagesPaths.SITE_PREFIX, "");
     }
 }

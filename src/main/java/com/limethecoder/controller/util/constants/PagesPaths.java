@@ -5,6 +5,8 @@ public interface PagesPaths {
     String USER_PREFIX = "/user";
     String ADMIN_PREFIX = "/admin";
 
+    String SITE_PREFIX = "/site";
+
     String HOME_PATH = "/home";
     String LOGIN_PATH = "/login";
     String SIGN_UP_PATH = "/signup";

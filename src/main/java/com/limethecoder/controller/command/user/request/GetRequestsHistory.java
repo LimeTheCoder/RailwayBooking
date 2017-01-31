@@ -27,11 +27,6 @@ public class GetRequestsHistory implements Command {
         User user = (User)httpRequest.getSession()
                 .getAttribute(Attributes.USER_ATTR);
 
-        if(user == null) {
-            Util.redirectTo(httpRequest, response, PagesPaths.HOME_PATH);
-            return REDIRECTED;
-        }
-
         List<Request> userRequests = requestService
                 .findAllByPassenger(user.getEmail());
         httpRequest.setAttribute(REQUESTS_ATTR, userRequests);
