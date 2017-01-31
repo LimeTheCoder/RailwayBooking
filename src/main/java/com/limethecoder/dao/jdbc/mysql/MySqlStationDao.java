@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlStationDao extends AbstractDaoTemplate<Station, Long>
-        implements StationDao {
+public class MySqlStationDao implements StationDao {
 
     private final static String SQL_SELECT_ALL =
             " SELECT * FROM Stations ";
@@ -24,30 +23,36 @@ public class MySqlStationDao extends AbstractDaoTemplate<Station, Long>
 
     private final static String WHERE_ID = " WHERE id = ?";
 
+    private final JdbcDaoTemplate<Station> jdbcTemplate;
+
     public MySqlStationDao(Connection connection) {
         this(connection, new StationReadConverter());
     }
 
     public MySqlStationDao(Connection connection,
                            ReadConverter<Station> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlStationDao(JdbcDaoTemplate<Station> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Station> findOne(Long id) {
-        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
+        return jdbcTemplate.findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Station> findAll() {
-        return findAll(SQL_SELECT_ALL);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public Station insert(Station station) {
         Objects.requireNonNull(station);
 
-        long generatedId = executeInsertWithGeneratedPrimaryKey(
+        long generatedId = jdbcTemplate.executeInsertWithGeneratedPrimaryKey(
                 SQL_INSERT,
                 station.getName(),
                 station.getCity(),
@@ -61,14 +66,14 @@ public class MySqlStationDao extends AbstractDaoTemplate<Station, Long>
 
     @Override
     public void delete(Long id) {
-        executeUpdate(SQL_DELETE + WHERE_ID, id);
+        jdbcTemplate.executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Station station) {
         Objects.requireNonNull(station);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_UPDATE + WHERE_ID,
                 station.getName(),
                 station.getCity(),

@@ -12,8 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlTrainDao extends AbstractDaoTemplate<Train, String>
-        implements TrainDao {
+public class MySqlTrainDao implements TrainDao {
 
     private final static String SQL_SELECT_ALL =
             " SELECT * FROM Trains ";
@@ -25,32 +24,41 @@ public class MySqlTrainDao extends AbstractDaoTemplate<Train, String>
 
     private final static String WHERE_SERIAL_NUMBER = " WHERE serial_no = ?";
 
+    private final JdbcDaoTemplate<Train> jdbcTemplate;
+
     public MySqlTrainDao(Connection connection) {
         this(connection, new TrainReadConverter());
     }
 
     public MySqlTrainDao(Connection connection,
                          ReadConverter<Train> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlTrainDao(JdbcDaoTemplate<Train> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Train> findOne(String serialNumber) {
         Objects.requireNonNull(serialNumber);
 
-        return findOne(SQL_SELECT_ALL + WHERE_SERIAL_NUMBER, serialNumber);
+        return jdbcTemplate.findOne(
+                SQL_SELECT_ALL + WHERE_SERIAL_NUMBER,
+                serialNumber
+        );
     }
 
     @Override
     public List<Train> findAll() {
-        return findAll(SQL_SELECT_ALL);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public Train insert(Train train) {
         Objects.requireNonNull(train);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_INSERT,
                 train.getSerialNumber(),
                 train.getCapacity()
@@ -63,15 +71,18 @@ public class MySqlTrainDao extends AbstractDaoTemplate<Train, String>
     public void delete(String serialNumber) {
         Objects.requireNonNull(serialNumber);
 
-        executeUpdate(SQL_DELETE + WHERE_SERIAL_NUMBER, serialNumber);
+        jdbcTemplate.executeUpdate(
+                SQL_DELETE + WHERE_SERIAL_NUMBER,
+                serialNumber
+        );
     }
 
     @Override
     public void update(Train train) {
         Objects.requireNonNull(train);
 
-        executeUpdate(
-                SQL_INSERT,
+        jdbcTemplate.executeUpdate(
+                SQL_UPDATE,
                 train.getCapacity(),
                 train.getSerialNumber()
         );

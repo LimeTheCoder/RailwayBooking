@@ -8,11 +8,13 @@ public interface GenericDao<T, ID> {
 
     List<T> findAll();
 
-    boolean isExist(ID id);
-
     T insert(T obj);
 
     void delete(ID id);
 
     void update(T obj);
+
+    default boolean isExist(ID id) {
+        return findOne(id).isPresent();
+    }
 }

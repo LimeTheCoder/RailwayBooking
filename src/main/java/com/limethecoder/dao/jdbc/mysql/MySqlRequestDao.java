@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlRequestDao extends AbstractDaoTemplate<Request, Long>
-        implements RequestDao {
+public class MySqlRequestDao implements RequestDao {
 
     private final static String SQL_SELECT_ALL =
             "SELECT Requests.departure, Requests.destination, Requests.departure_time, " +
@@ -41,30 +40,36 @@ public class MySqlRequestDao extends AbstractDaoTemplate<Request, Long>
 
     private final static String ORDER_BY_ID_DESC = " ORDER BY id DESC";
 
+    private final JdbcDaoTemplate<Request> jdbcTemplate;
+
     public MySqlRequestDao(Connection connection) {
         this(connection, new RequestReadConverter());
     }
 
     public MySqlRequestDao(Connection connection,
                            ReadConverter<Request> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlRequestDao(JdbcDaoTemplate<Request> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Request> findOne(Long id) {
-        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
+        return jdbcTemplate.findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Request> findAll() {
-        return findAll(SQL_SELECT_ALL + ORDER_BY_ID_DESC);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL + ORDER_BY_ID_DESC);
     }
 
     @Override
     public Request insert(Request request) {
         Objects.requireNonNull(request);
 
-        long generatedId = executeInsertWithGeneratedPrimaryKey(
+        long generatedId = jdbcTemplate.executeInsertWithGeneratedPrimaryKey(
                 SQL_INSERT,
                 request.getDeparture().getId(),
                 request.getDestination().getId(),
@@ -80,14 +85,14 @@ public class MySqlRequestDao extends AbstractDaoTemplate<Request, Long>
 
     @Override
     public void delete(Long id) {
-        executeUpdate(SQL_DELETE + WHERE_ID, id);
+        jdbcTemplate.executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Request request) {
         Objects.requireNonNull(request);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_UPDATE + WHERE_ID,
                 request.getDeparture().getId(),
                 request.getDestination().getId(),
@@ -102,6 +107,9 @@ public class MySqlRequestDao extends AbstractDaoTemplate<Request, Long>
     public List<Request> findAllByPassenger(String email) {
         Objects.requireNonNull(email);
 
-        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER + ORDER_BY_ID_DESC, email);
+        return jdbcTemplate.findAll(
+                SQL_SELECT_ALL + WHERE_PASSENGER + ORDER_BY_ID_DESC,
+                email
+        );
     }
 }

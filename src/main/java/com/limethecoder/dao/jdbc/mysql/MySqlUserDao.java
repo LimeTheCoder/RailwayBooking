@@ -11,8 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlUserDao extends AbstractDaoTemplate<User, String>
-        implements UserDao {
+public class MySqlUserDao implements UserDao {
 
     private final static String SQL_SELECT_ALL =
             " SELECT * FROM Users ";
@@ -26,32 +25,38 @@ public class MySqlUserDao extends AbstractDaoTemplate<User, String>
 
     private final static String WHERE_EMAIL = " WHERE email = ?";
 
+    private final JdbcDaoTemplate<User> jdbcTemplate;
+
     public MySqlUserDao(Connection connection) {
         this(connection, new UserReadConverter());
     }
 
     public MySqlUserDao(Connection connection,
                         ReadConverter<User> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlUserDao(JdbcDaoTemplate<User> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<User> findOne(String email) {
         Objects.requireNonNull(email);
 
-        return findOne(SQL_SELECT_ALL + WHERE_EMAIL, email);
+        return jdbcTemplate.findOne(SQL_SELECT_ALL + WHERE_EMAIL, email);
     }
 
     @Override
     public List<User> findAll() {
-        return findAll(SQL_SELECT_ALL);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public User insert(User user) {
         Objects.requireNonNull(user);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_INSERT,
                 user.getEmail(),
                 user.getName(),
@@ -68,14 +73,14 @@ public class MySqlUserDao extends AbstractDaoTemplate<User, String>
     public void delete(String email) {
         Objects.requireNonNull(email);
 
-        executeUpdate(SQL_DELETE + WHERE_EMAIL, email);
+        jdbcTemplate.executeUpdate(SQL_DELETE + WHERE_EMAIL, email);
     }
 
     @Override
     public void update(User user) {
         Objects.requireNonNull(user);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_UPDATE + WHERE_EMAIL,
                 user.getName(),
                 user.getSurname(),

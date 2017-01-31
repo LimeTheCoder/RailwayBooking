@@ -11,8 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
-        implements InvoiceDao {
+public class MySqlInvoiceDao implements InvoiceDao {
 
     private final static String SQL_SELECT_ALL =
             "SELECT Invoices.id, Invoices.status, " +
@@ -58,45 +57,54 @@ public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
     private final static String WHERE_ROUTE_ID = " WHERE route = ?";
     private final static String WHERE_STATUS = " WHERE status = ?";
 
+    private final JdbcDaoTemplate<Invoice> jdbcTemplate;
+
     public MySqlInvoiceDao(Connection connection) {
         this(connection, new InvoiceReadConverter());
     }
 
     public MySqlInvoiceDao(Connection connection,
                            ReadConverter<Invoice> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlInvoiceDao(JdbcDaoTemplate<Invoice> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Invoice> findOne(Long id) {
-        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
+        return jdbcTemplate.findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Invoice> findAll() {
-        return findAll(SQL_SELECT_ALL);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public List<Invoice> findAllByPassenger(String passengerEmail) {
-        return findAll(SQL_SELECT_ALL + WHERE_PASSENGER_ID, passengerEmail);
+        return jdbcTemplate.findAll(
+                SQL_SELECT_ALL + WHERE_PASSENGER_ID,
+                passengerEmail
+        );
     }
 
     @Override
     public List<Invoice> findAllByRoute(Long routeId) {
-        return findAll(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
     }
 
     @Override
     public List<Invoice> findAllByStatus(Invoice.Status status) {
-        return findAll(SQL_SELECT_ALL + WHERE_STATUS, status.name());
+        return jdbcTemplate.findAll(SQL_SELECT_ALL + WHERE_STATUS, status.name());
     }
 
     @Override
     public Invoice insert(Invoice invoice) {
         Objects.requireNonNull(invoice);
 
-        long generatedId = executeInsertWithGeneratedPrimaryKey(
+        long generatedId = jdbcTemplate.executeInsertWithGeneratedPrimaryKey(
                 SQL_INSERT,
                 invoice.getRequest().getId(),
                 invoice.getRoute().getId(),
@@ -110,14 +118,14 @@ public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
 
     @Override
     public void delete(Long id) {
-        executeUpdate(SQL_DELETE + WHERE_ID, id);
+        jdbcTemplate.executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Invoice invoice) {
         Objects.requireNonNull(invoice);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_UPDATE + WHERE_ID,
                 invoice.getRequest().getId(),
                 invoice.getRoute().getId(),

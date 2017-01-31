@@ -11,8 +11,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
-        implements RouteDao {
+public class MySqlRouteDao implements RouteDao {
 
     private final static String SQL_SELECT_ALL =
             "SELECT Routes.departure_station, Routes.destination_station, " +
@@ -45,30 +44,36 @@ public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
             " WHERE departure_station = ? and destination_station = ? " +
                     "and destination_time >= ?";
 
+    private final JdbcDaoTemplate<Route> jdbcTemplate;
+
     public MySqlRouteDao(Connection connection) {
         this(connection, new RouteReadConverter());
     }
 
     public MySqlRouteDao(Connection connection,
                          ReadConverter<Route> converter) {
-        super(connection, converter);
+        jdbcTemplate = new JdbcDaoTemplate<>(connection, converter);
+    }
+
+    public MySqlRouteDao(JdbcDaoTemplate<Route> jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Route> findOne(Long id) {
-        return findOne(SQL_SELECT_ALL + WHERE_ID, id);
+        return jdbcTemplate.findOne(SQL_SELECT_ALL + WHERE_ID, id);
     }
 
     @Override
     public List<Route> findAll() {
-        return findAll(SQL_SELECT_ALL);
+        return jdbcTemplate.findAll(SQL_SELECT_ALL);
     }
 
     @Override
     public Route insert(Route route) {
         Objects.requireNonNull(route);
 
-        long generatedId = executeInsertWithGeneratedPrimaryKey(
+        long generatedId = jdbcTemplate.executeInsertWithGeneratedPrimaryKey(
                 SQL_INSERT,
                 route.getDeparture().getId(),
                 route.getDestination().getId(),
@@ -85,14 +90,14 @@ public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
 
     @Override
     public void delete(Long id) {
-        executeUpdate(SQL_DELETE + WHERE_ID, id);
+        jdbcTemplate.executeUpdate(SQL_DELETE + WHERE_ID, id);
     }
 
     @Override
     public void update(Route route) {
         Objects.requireNonNull(route);
 
-        executeUpdate(
+        jdbcTemplate.executeUpdate(
                 SQL_UPDATE + WHERE_ID,
                 route.getDeparture().getId(),
                 route.getDestination().getId(),
@@ -109,7 +114,7 @@ public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
 
-        return findAll(
+        return jdbcTemplate.findAll(
                 SQL_SELECT_ALL + WHERE_DEP_AND_DEST_STATION_ID,
                 from.getId(),
                 to.getId()
@@ -124,7 +129,7 @@ public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
         Objects.requireNonNull(to);
         Objects.requireNonNull(after);
 
-        return findAll(
+        return jdbcTemplate.findAll(
                 SQL_SELECT_ALL + WHERE_STATIONS_AND_DATE,
                 from.getId(),
                 to.getId(),

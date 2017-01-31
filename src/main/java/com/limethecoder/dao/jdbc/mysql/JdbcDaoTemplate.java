@@ -1,7 +1,6 @@
 package com.limethecoder.dao.jdbc.mysql;
 
 
-import com.limethecoder.dao.GenericDao;
 import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.ReadConverter;
 
@@ -12,13 +11,11 @@ import java.util.Optional;
 
 
 /**
- * Abstract dao template to simplify creation of dao for all entities.
+ * JDBC dao template to simplify creation of dao for all entities.
  *
  * @param <T> type of domain object
- * @param <ID> type of identifier
- *
  */
-public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
+public class JdbcDaoTemplate<T> {
     private final static String ERROR_GENERATE_KEY =
             "Can't retrieve generated key";
     private final static String SQL_LIMIT_ONE = " LIMIT 1";
@@ -29,14 +26,9 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
     /** Converts data from ResultSet to domain object */
     private ReadConverter<T> converter;
 
-    public AbstractDaoTemplate(Connection connection, ReadConverter<T> converter) {
+    public JdbcDaoTemplate(Connection connection, ReadConverter<T> converter) {
         this.connection = connection;
         this.converter = converter;
-    }
-
-    @Override
-    public boolean isExist(ID id) {
-        return findOne(id).isPresent();
     }
 
 
@@ -47,7 +39,7 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
      * @param params parameters to substitute wildcards in query
      * @return Optional object, which contains retrieved object or null
      */
-     protected Optional<T> findOne(String query, Object... params) {
+     public Optional<T> findOne(String query, Object... params) {
          List<T> results = findAll(query + SQL_LIMIT_ONE, params);
          return Optional.ofNullable(results.isEmpty() ? null : results.get(0));
     }
@@ -59,7 +51,7 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
      * @param params parameters to substitute wildcards in query
      * @return list of retrieved objects
      */
-    protected List<T> findAll(String query, Object... params) {
+    public List<T> findAll(String query, Object... params) {
         try (PreparedStatement statement = connection
                 .prepareStatement(query)) {
 
@@ -80,7 +72,7 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
      * @param query sql-based string, which specify update behavior
      * @param params parameters to substitute wildcards in query
      */
-    protected void executeUpdate(String query, Object... params) {
+    public void executeUpdate(String query, Object... params) {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             setParamsToStatement(statement, params);
             statement.executeUpdate();
@@ -99,7 +91,7 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
      * @param params parameters to substitute wildcards in query
      * @return generated id
      */
-    protected long executeInsertWithGeneratedPrimaryKey(String query,
+    public long executeInsertWithGeneratedPrimaryKey(String query,
                                                         Object... params) {
         try (PreparedStatement statement = connection
                 .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -121,7 +113,7 @@ public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
      * @param params parameters to substitute wildcards in raw query
      * @throws SQLException
      */
-    protected void setParamsToStatement(PreparedStatement statement, Object... params)
+    private void setParamsToStatement(PreparedStatement statement, Object... params)
             throws SQLException {
         Objects.requireNonNull(params);
 
