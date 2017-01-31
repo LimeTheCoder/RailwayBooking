@@ -2,7 +2,6 @@ package com.limethecoder.dao.jdbc.mysql;
 
 
 import com.limethecoder.dao.StationDao;
-import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.ReadConverter;
 import com.limethecoder.dao.util.converter.StationReadConverter;
 import com.limethecoder.entity.Station;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlStationDao extends AbstractDao<Station, Long>
+public class MySqlStationDao extends AbstractDaoTemplate<Station, Long>
         implements StationDao {
 
     private final static String SQL_SELECT_ALL =

@@ -12,13 +12,13 @@ import java.util.Optional;
 
 
 /**
- * Abstract dao implementation to simplify creation of dao for all entities.
+ * Abstract dao template to simplify creation of dao for all entities.
  *
  * @param <T> type of domain object
  * @param <ID> type of identifier
  *
  */
-public abstract class AbstractDao<T, ID> implements GenericDao<T, ID> {
+public abstract class AbstractDaoTemplate<T, ID> implements GenericDao<T, ID> {
     private final static String ERROR_GENERATE_KEY =
             "Can't retrieve generated key";
     private final static String SQL_LIMIT_ONE = " LIMIT 1";
@@ -29,7 +29,7 @@ public abstract class AbstractDao<T, ID> implements GenericDao<T, ID> {
     /** Converts data from ResultSet to domain object */
     private ReadConverter<T> converter;
 
-    public AbstractDao(Connection connection, ReadConverter<T> converter) {
+    public AbstractDaoTemplate(Connection connection, ReadConverter<T> converter) {
         this.connection = connection;
         this.converter = converter;
     }

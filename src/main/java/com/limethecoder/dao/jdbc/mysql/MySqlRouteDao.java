@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-public class MySqlRouteDao extends AbstractDao<Route, Long>
+public class MySqlRouteDao extends AbstractDaoTemplate<Route, Long>
         implements RouteDao {
 
     private final static String SQL_SELECT_ALL =

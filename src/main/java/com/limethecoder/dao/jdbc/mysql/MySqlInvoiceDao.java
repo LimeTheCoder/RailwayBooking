@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlInvoiceDao extends AbstractDao<Invoice, Long>
+public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
         implements InvoiceDao {
 
     private final static String SQL_SELECT_ALL =

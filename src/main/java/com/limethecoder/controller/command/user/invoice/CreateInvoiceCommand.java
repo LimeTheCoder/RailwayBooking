@@ -26,15 +26,14 @@ public class CreateInvoiceCommand implements Command {
     private RouteService routeService = RouteServiceImpl.getInstance();
     private InvoiceService invoiceService = InvoiceServiceImpl.getInstance();
 
-    private Request userRequest;
-    private Optional<Route> routeOptional;
-
     @Override
     public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
 
         if(isUserRequestInSession(httpRequest)) {
-            getUserRequestAndRouteFromRequest(httpRequest);
+            Request userRequest = getUserRequestFromHttpRequest(httpRequest);
+            Optional<Route> routeOptional =
+                    getRouteOptionalBasedOnHttpRequest(httpRequest);
 
             if(routeOptional.isPresent()) {
                 createNewInvoice(routeOptional.get(), userRequest);
@@ -49,11 +48,14 @@ public class CreateInvoiceCommand implements Command {
         return REDIRECTED;
     }
 
-    private void getUserRequestAndRouteFromRequest(HttpServletRequest httpRequest) {
-        userRequest = (Request) httpRequest.getSession()
+    private Request getUserRequestFromHttpRequest(HttpServletRequest httpRequest) {
+        return (Request) httpRequest.getSession()
                 .getAttribute(Attributes.USER_REQUEST_ATTR);
+    }
+
+    private Optional<Route> getRouteOptionalBasedOnHttpRequest(HttpServletRequest httpRequest) {
         long routeId = Long.valueOf(httpRequest.getParameter(ROUTE_PARAM));
-        routeOptional = routeService.findById(routeId);
+        return routeService.findById(routeId);
     }
 
     private boolean isUserRequestInSession(HttpServletRequest request) {

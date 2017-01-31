@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MySqlRequestDao extends AbstractDao<Request, Long>
+public class MySqlRequestDao extends AbstractDaoTemplate<Request, Long>
         implements RequestDao {
 
     private final static String SQL_SELECT_ALL =

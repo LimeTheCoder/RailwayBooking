@@ -5,7 +5,6 @@ import com.limethecoder.controller.util.Util;
 import com.limethecoder.controller.util.constants.Attributes;
 import com.limethecoder.controller.util.constants.PagesPaths;
 import com.limethecoder.controller.util.constants.Views;
-import com.limethecoder.controller.util.validator.DateValidator;
 import com.limethecoder.entity.Request;
 import com.limethecoder.entity.Route;
 import com.limethecoder.entity.Station;
@@ -21,7 +20,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,9 @@ public class PostRequestForm implements Command {
     private final static String TO_PARAM = "to";
     private final static String DEP_DATE_PARAM = "dep_date";
 
+    private final static String INVALID_DATE_KEY = "invalid.date";
     private final static String ERROR_EQUAL_STATION = "error.stations.equal";
+
     private final static String DATE_PATTERN = "yyyy-MM-dd";
 
     private final static String USER_REQUEST_PARAM = "request";
@@ -40,94 +44,119 @@ public class PostRequestForm implements Command {
     private RouteService routeService = RouteServiceImpl.getInstance();
     private RequestService requestService = RequestServiceImpl.getInstance();
 
-    private DateValidator dateValidator = new DateValidator(DATE_PATTERN);
-    private Request userRequestDto;
-    private List<Route> routes;
-
     @Override
     public String execute(HttpServletRequest httpRequest, HttpServletResponse response)
             throws ServletException, IOException {
-        List<String> errors = getUserRequestFromHttpRequest(httpRequest);
+        Request userRequestDto = getUserRequestFromHttpRequest(httpRequest);
+        List<String> errors = validateData(userRequestDto);
 
         if(errors.isEmpty()) {
-            loadRoutesWhichMatchRequest();
-            setUpUserRequestFields(httpRequest);
-            saveUserRequest();
-            setRequestAndRoutesAsSessionAttributes(httpRequest);
+            List<Route> routes = loadRoutesWhichMatchRequest(userRequestDto);
+
+            setUpUserRequestFields(userRequestDto, httpRequest, routes.size());
+            saveUserRequestToDatabase(userRequestDto);
+            setRequestAndRoutesAsSessionAttributes(
+                    httpRequest,
+                    userRequestDto,
+                    routes
+            );
+
             Util.redirectTo(httpRequest, response, PagesPaths.ROUTES_PATH);
 
             return REDIRECTED;
         }
 
-        addInvalidDataToRequest(httpRequest, errors);
+        addInvalidDataToRequest(httpRequest, userRequestDto, errors);
 
         return Views.REQUEST_VIEW;
     }
 
-    private List<String> getUserRequestFromHttpRequest(HttpServletRequest httpRequest) {
+    private Request getUserRequestFromHttpRequest(HttpServletRequest httpRequest) {
         long departureId = Long.valueOf(httpRequest.getParameter(FROM_PARAM));
         long destinationId = Long.valueOf(httpRequest.getParameter(TO_PARAM));
         String departureDate = httpRequest.getParameter(DEP_DATE_PARAM);
 
+        return Request.newBuilder()
+                .setDeparture(new Station(departureId))
+                .setDestination(new Station(destinationId))
+                .setDepartureTime(parseDate(departureDate))
+                .build();
+    }
+
+    private Date parseDate(String dateInString) {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+
+        try {
+            return formatter.parse(dateInString);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    private List<String> validateData(Request userRequest) {
         List<String> errors = new ArrayList<>();
 
-        if(departureId == destinationId) {
+        if(userRequest.getDeparture().equals(userRequest.getDestination())) {
             errors.add(ERROR_EQUAL_STATION);
         }
 
-        if(!dateValidator.isValid(departureDate)) {
-            errors.add(dateValidator.getErrorKey());
+        if(userRequest.getDepartureTime() == null) {
+            errors.add(INVALID_DATE_KEY);
         }
-
-        userRequestDto = Request.newBuilder()
-                .setDeparture(new Station(departureId))
-                .setDestination(new Station(destinationId))
-                .setDepartureTime(dateValidator.getParsedDate())
-                .build();
 
         return errors;
     }
 
-    private void loadRoutesWhichMatchRequest() {
-        routes = routeService.findByStationsAndDate(userRequestDto.getDeparture(),
-                userRequestDto.getDestination(), userRequestDto.getDepartureTime());
+    private List<Route> loadRoutesWhichMatchRequest(Request userRequest) {
+        return routeService.findByStationsAndDate(
+                userRequest.getDeparture(),
+                userRequest.getDestination(),
+                userRequest.getDepartureTime()
+        );
     }
 
-    private void setUpUserRequestFields(HttpServletRequest httpRequest) {
+    private void setUpUserRequestFields(Request userRequest,
+                                        HttpServletRequest httpRequest,
+                                        int routesCnt) {
         User user = (User)httpRequest.getSession()
                 .getAttribute(Attributes.USER_ATTR);
-        userRequestDto.setPassenger(user);
+        userRequest.setPassenger(user);
 
-        Optional<Station> departure = stationService.findById(userRequestDto
+        Optional<Station> departureOptional = stationService.findById(userRequest
                 .getDeparture().getId());
-        Optional<Station> destination = stationService.findById(userRequestDto
+        Optional<Station> destinationOptional = stationService.findById(userRequest
                 .getDestination().getId());
 
-        userRequestDto.setDeparture(departure.orElse(userRequestDto
-                .getDeparture()));
-        userRequestDto.setDestination(destination.orElse(userRequestDto
-                .getDestination()));
-        userRequestDto.setResultCnt(routes.size());
+        Station departure = departureOptional.orElse(userRequest.getDeparture());
+        Station destination = destinationOptional.orElse(userRequest
+                .getDestination());
+
+        userRequest.setDeparture(departure);
+        userRequest.setDestination(destination);
+        userRequest.setResultCnt(routesCnt);
     }
 
-    private void setRequestAndRoutesAsSessionAttributes(HttpServletRequest httpRequest)
+    private void setRequestAndRoutesAsSessionAttributes(HttpServletRequest httpRequest,
+                                                        Request userRequest,
+                                                        List<Route> routes)
             throws IOException{
         httpRequest.getSession().setAttribute(Attributes.USER_REQUEST_ATTR,
-                userRequestDto);
+                userRequest);
         httpRequest.getSession().setAttribute(Attributes.ROUTES_ATTR,
                 routes);
     }
 
     private void addInvalidDataToRequest(HttpServletRequest httpRequest,
+                                         Request userRequest,
                                          List<String> errors) {
         List<Station> stations = stationService.findAll();
         httpRequest.setAttribute(Attributes.STATIONS_ATTR, stations);
 
         httpRequest.setAttribute(Attributes.ERRORS_LIST, errors);
-        httpRequest.setAttribute(USER_REQUEST_PARAM, userRequestDto);
+        httpRequest.setAttribute(USER_REQUEST_PARAM, userRequest);
     }
 
-    private void saveUserRequest() {
-        userRequestDto = requestService.createRequest(userRequestDto);
+    private void saveUserRequestToDatabase(Request userRequest) {
+        requestService.createRequest(userRequest);
     }
 }

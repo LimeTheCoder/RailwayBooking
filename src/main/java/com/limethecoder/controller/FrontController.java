@@ -62,6 +62,7 @@ public class FrontController extends HttpServlet {
     }
 
     private String getPath(HttpServletRequest request) {
-        return request.getRequestURI().replaceAll(PREFIX, "");
+        String uri = request.getRequestURI();
+        return uri.replaceAll(PREFIX, "");
     }
 }

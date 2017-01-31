@@ -2,7 +2,6 @@ package com.limethecoder.dao.jdbc.mysql;
 
 
 import com.limethecoder.dao.TrainDao;
-import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.ReadConverter;
 import com.limethecoder.dao.util.converter.TrainReadConverter;
 import com.limethecoder.entity.Train;
@@ -13,7 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlTrainDao extends AbstractDao<Train, String>
+public class MySqlTrainDao extends AbstractDaoTemplate<Train, String>
         implements TrainDao {
 
     private final static String SQL_SELECT_ALL =

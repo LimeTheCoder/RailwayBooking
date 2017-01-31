@@ -1,6 +1,12 @@
 package com.limethecoder.controller.util.validator;
 
-
+/**
+ * Common implementation of validator.
+ * Performs validation of input data.
+ * Isn't thread-safe.
+ *
+ * @param <T>
+ */
 public abstract class AbstractValidator<T> implements Validator<T> {
     /**
      * Default error message, that will shown in case

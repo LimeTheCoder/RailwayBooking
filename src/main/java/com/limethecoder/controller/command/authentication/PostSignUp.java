@@ -15,6 +15,7 @@ import com.limethecoder.service.UserService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +39,6 @@ public class PostSignUp implements Command {
 
     private final UserService userService = UserServiceImpl.getInstance();
 
-    private Validator<String> emailValidator = new EmailValidator();
-    private Validator<String> passwordValidator = new PasswordValidator();
-    private Validator<String> nameValidator = new NameValidator(INVALID_NAME_KEY);
-    private Validator<String> surnameValidator =
-            new NameValidator(INVALID_SURNAME_KEY);
-    private Validator<String> phoneValidator = new PhoneValidator();
-
-    private User userDto;
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -55,17 +47,20 @@ public class PostSignUp implements Command {
             return REDIRECTED;
         }
 
-        userDto = getDataFromRequest(request);
-        List<String> errors = validateData();
+        User userDto = getDataFromRequest(request);
+        List<String> errors = validateData(userDto);
 
         if(errors.isEmpty()) {
             userService.createUser(userDto);
-            addUserToSessionAndRedirect(request, response);
-            logInfoAboutRegistration();
+            addUserToSession(request.getSession(), userDto);
+            logInfoAboutRegistration(userDto);
+
+            Util.redirectTo(request, response, PagesPaths.HOME_PATH);
+
             return REDIRECTED;
         }
 
-        addInvalidDataToRequest(request, errors);
+        addInvalidDataToRequest(request, userDto, errors);
 
         return Views.SIGN_UP_VIEW;
     }
@@ -80,30 +75,20 @@ public class PostSignUp implements Command {
                 .build();
     }
 
-    private List<String> validateData() {
+    private List<String> validateData(User user) {
         List<String> errors = new ArrayList<>();
 
-        if(!emailValidator.isValid(userDto.getEmail())) {
-            errors.add(emailValidator.getErrorKey());
-        }
+        Util.validateField(new EmailValidator(), user.getEmail(), errors);
+        Util.validateField(new PasswordValidator(), user.getPassword(), errors);
+        Util.validateField(new PhoneValidator(), user.getPhone(), errors);
 
-        if(!passwordValidator.isValid(userDto.getPassword())) {
-            errors.add(passwordValidator.getErrorKey());
-        }
+        NameValidator nameValidator = new NameValidator(INVALID_NAME_KEY);
+        Util.validateField(nameValidator, user.getName(), errors);
 
-        if(!phoneValidator.isValid(userDto.getPhone())) {
-            errors.add(phoneValidator.getErrorKey());
-        }
+        NameValidator surnameValidator = new NameValidator(INVALID_SURNAME_KEY);
+        Util.validateField(surnameValidator, user.getSurname(), errors);
 
-        if(!nameValidator.isValid(userDto.getName())) {
-            errors.add(nameValidator.getErrorKey());
-        }
-
-        if(!surnameValidator.isValid(userDto.getSurname())) {
-            errors.add(surnameValidator.getErrorKey());
-        }
-
-        if(errors.isEmpty() && userService.isUserExists(userDto.getEmail())) {
+        if(errors.isEmpty() && userService.isUserExists(user.getEmail())) {
             errors.add(USER_ALREADY_EXISTS);
         }
 
@@ -111,20 +96,18 @@ public class PostSignUp implements Command {
     }
 
     private void addInvalidDataToRequest(HttpServletRequest request,
+                                         User user,
                                          List<String> errors) {
-        request.setAttribute(Attributes.USER_ATTR, userDto);
+        request.setAttribute(Attributes.USER_ATTR, user);
         request.setAttribute(Attributes.ERRORS_LIST, errors);
     }
 
-    private void addUserToSessionAndRedirect(HttpServletRequest request,
-                                             HttpServletResponse response)
+    private void addUserToSession(HttpSession session, User user)
             throws IOException {
-        request.getSession().setAttribute(Attributes.USER_ATTR, userDto);
-        Util.redirectTo(request, response, PagesPaths.HOME_PATH);
+        session.setAttribute(Attributes.USER_ATTR, user);
     }
 
-    private void logInfoAboutRegistration() {
-        logger.info(ACCOUNT_CREATED +
-                userDto.getEmail());
+    private void logInfoAboutRegistration(User user) {
+        logger.info(ACCOUNT_CREATED + user.getEmail());
     }
 }

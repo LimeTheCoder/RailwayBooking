@@ -1,7 +1,6 @@
 package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.UserDao;
-import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.ReadConverter;
 import com.limethecoder.dao.util.converter.UserReadConverter;
 import com.limethecoder.entity.User;
@@ -12,7 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class MySqlUserDao extends AbstractDao<User, String>
+public class MySqlUserDao extends AbstractDaoTemplate<User, String>
         implements UserDao {
 
     private final static String SQL_SELECT_ALL =
