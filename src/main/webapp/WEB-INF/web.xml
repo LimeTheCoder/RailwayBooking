@@ -13,10 +13,6 @@
         <url-pattern>/site/*</url-pattern>
     </servlet-mapping>
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/views/errorPage.jsp</location>
-    </error-page>
 
     <filter>
         <filter-name>CharFilter</filter-name>
@@ -44,10 +40,21 @@
         <filter-name>auth</filter-name>
         <filter-class>com.limethecoder.controller.filters.AuthFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>auth</filter-name>
         <url-pattern>/site/user/*</url-pattern>
         <url-pattern>/site/admin/*</url-pattern>
     </filter-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/errors/invalidPagePath.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/views/errors/internalServerError.jsp</location>
+    </error-page>
 
 </web-app>

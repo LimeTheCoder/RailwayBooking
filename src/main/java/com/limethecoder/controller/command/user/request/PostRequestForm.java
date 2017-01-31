@@ -35,6 +35,7 @@ public class PostRequestForm implements Command {
 
     private final static String INVALID_DATE_KEY = "invalid.date";
     private final static String ERROR_EQUAL_STATION = "error.stations.equal";
+    private final static String ERROR_DATE_BEFORE_CURRENT = "error.date.before";
 
     private final static String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -102,6 +103,12 @@ public class PostRequestForm implements Command {
 
         if(userRequest.getDepartureTime() == null) {
             errors.add(INVALID_DATE_KEY);
+        }
+
+        Date current = new Date();
+
+        if(userRequest.getDepartureTime().before(current)) {
+            errors.add(ERROR_DATE_BEFORE_CURRENT);
         }
 
         return errors;
