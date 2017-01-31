@@ -1,4 +1,4 @@
-package com.limethecoder.controller.util.tags;
+package com.limethecoder.controller.tags;
 
 
 import javax.servlet.http.HttpServletRequest;

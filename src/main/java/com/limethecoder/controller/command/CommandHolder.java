@@ -1,6 +1,7 @@
 package com.limethecoder.controller.command;
 
 
+import com.limethecoder.controller.command.admin.GetPendingInvoices;
 import com.limethecoder.controller.command.authentication.*;
 import com.limethecoder.controller.command.user.invoice.CreateInvoiceCommand;
 import com.limethecoder.controller.command.user.invoice.GetInvoices;
@@ -53,6 +54,8 @@ public class CommandHolder {
                 new CreateInvoiceCommand());
         commands.put(buildKey(PagesPaths.INVOICES_PATH, Method.GET),
                 new GetInvoices());
+        commands.put(buildKey(PagesPaths.PENDING_INVOICES_PATH, Method.GET),
+                new GetPendingInvoices());
     }
 
     public Command getCommand(String path, Method method) {

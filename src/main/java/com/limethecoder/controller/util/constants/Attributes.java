@@ -7,4 +7,5 @@ public interface Attributes {
     String ERRORS_LIST = "errors";
     String STATIONS_ATTR = "stations";
     String ROUTES_ATTR = "routes";
+    String INVOICES_ATTR = "invoices";
 }

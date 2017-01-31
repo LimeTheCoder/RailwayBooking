@@ -56,6 +56,7 @@ public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
     private final static String WHERE_PASSENGER_ID =
             " WHERE (SELECT passenger FROM Requests WHERE Requests.id = request) = ?";
     private final static String WHERE_ROUTE_ID = " WHERE route = ?";
+    private final static String WHERE_STATUS = " WHERE status = ?";
 
     public MySqlInvoiceDao(Connection connection) {
         this(connection, new InvoiceReadConverter());
@@ -84,6 +85,11 @@ public class MySqlInvoiceDao extends AbstractDaoTemplate<Invoice, Long>
     @Override
     public List<Invoice> findAllByRoute(Long routeId) {
         return findAll(SQL_SELECT_ALL + WHERE_ROUTE_ID, routeId);
+    }
+
+    @Override
+    public List<Invoice> findAllByStatus(Invoice.Status status) {
+        return findAll(SQL_SELECT_ALL + WHERE_STATUS, status.name());
     }
 
     @Override

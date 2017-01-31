@@ -1,4 +1,4 @@
-package com.limethecoder.controller.util.validator;
+package com.limethecoder.controller.validator;
 
 /**
  * Common implementation of validator.

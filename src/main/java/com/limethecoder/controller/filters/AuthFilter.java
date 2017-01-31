@@ -1,4 +1,4 @@
-package com.limethecoder.controller.util.filters;
+package com.limethecoder.controller.filters;
 
 
 import com.limethecoder.controller.util.Util;
@@ -6,7 +6,6 @@ import com.limethecoder.controller.util.constants.Attributes;
 import com.limethecoder.controller.util.constants.PagesPaths;
 import com.limethecoder.entity.Role;
 import com.limethecoder.entity.User;
-import com.sun.deploy.net.HttpRequest;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;

@@ -9,7 +9,7 @@
 
     <tag>
         <name>viewUri</name>
-        <tag-class>com.limethecoder.controller.util.tags.RequestedViewTag</tag-class>
+        <tag-class>com.limethecoder.controller.tags.RequestedViewTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 </taglib>

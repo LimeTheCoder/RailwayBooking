@@ -10,6 +10,7 @@ public interface InvoiceService {
     Optional<Invoice> findById(long id);
     List<Invoice> findAllByPassenger(String email);
     List<Invoice> findAllByRoute(long routeId);
+    List<Invoice> findPendingInvoices();
     Invoice create(Invoice invoice);
     void delete(long id);
 }

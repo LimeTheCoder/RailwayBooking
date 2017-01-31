@@ -2,7 +2,7 @@ package com.limethecoder.controller.util;
 
 
 import com.limethecoder.controller.util.constants.Attributes;
-import com.limethecoder.controller.util.validator.Validator;
+import com.limethecoder.controller.validator.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

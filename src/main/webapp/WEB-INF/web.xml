@@ -42,7 +42,7 @@
 
     <filter>
         <filter-name>auth</filter-name>
-        <filter-class>com.limethecoder.controller.util.filters.AuthFilter</filter-class>
+        <filter-class>com.limethecoder.controller.filters.AuthFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>auth</filter-name>

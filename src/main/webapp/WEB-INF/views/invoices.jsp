@@ -55,6 +55,19 @@
                                 <p>Creation time:
                                     <c:out value="${invoice.getRequest().getCreationTime()}" />
                                 </p>
+                                <c:if test="${sessionScope.user.isAdmin()}">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-success">Submit</button>
+                                        </div>
+                                        <div class="col-md-5"></div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-danger">Reject</button>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <p></p>
+                                </c:if>
                             </div>
                         </div>
                     </div>

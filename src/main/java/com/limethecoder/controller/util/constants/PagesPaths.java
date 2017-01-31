@@ -17,4 +17,6 @@ public interface PagesPaths {
     String REQUEST_PATH = USER_PREFIX + "/request";
     String NEW_INVOICE_PATH = USER_PREFIX + "/invoices/new";
     String INVOICES_PATH = USER_PREFIX + "/invoices";
+
+    String PENDING_INVOICES_PATH = ADMIN_PREFIX + "/invoices";
 }

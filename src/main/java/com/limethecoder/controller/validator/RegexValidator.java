@@ -1,4 +1,4 @@
-package com.limethecoder.controller.util.validator;
+package com.limethecoder.controller.validator;
 
 
 import java.util.regex.Pattern;

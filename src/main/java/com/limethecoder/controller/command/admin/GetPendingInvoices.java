@@ -1,13 +1,10 @@
-package com.limethecoder.controller.command.user.invoice;
+package com.limethecoder.controller.command.admin;
 
 
 import com.limethecoder.controller.command.Command;
-import com.limethecoder.controller.util.Util;
 import com.limethecoder.controller.util.constants.Attributes;
-import com.limethecoder.controller.util.constants.PagesPaths;
 import com.limethecoder.controller.util.constants.Views;
 import com.limethecoder.entity.Invoice;
-import com.limethecoder.entity.User;
 import com.limethecoder.service.Impl.InvoiceServiceImpl;
 import com.limethecoder.service.InvoiceService;
 
@@ -17,17 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class GetInvoices implements Command {
-
+public class GetPendingInvoices implements Command {
     private InvoiceService invoiceService = InvoiceServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User)request.getSession()
-                .getAttribute(Attributes.USER_ATTR);
 
-        List<Invoice> invoices = invoiceService.findAllByPassenger(user.getEmail());
+        List<Invoice> invoices = invoiceService.findPendingInvoices();
         request.setAttribute(Attributes.INVOICES_ATTR, invoices);
 
         return Views.INVOICES_VIEW;
