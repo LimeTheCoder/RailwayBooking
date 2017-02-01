@@ -3,6 +3,7 @@ package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.converter.ReadConverter;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -19,6 +20,8 @@ public class JdbcDaoTemplate<T> {
     private final static String ERROR_GENERATE_KEY =
             "Can't retrieve generated key";
     private final static String SQL_LIMIT_ONE = " LIMIT 1";
+
+    private final Logger logger = Logger.getLogger(JdbcDaoTemplate.class);
 
     /** Connection to database */
     private Connection connection;
@@ -61,6 +64,7 @@ public class JdbcDaoTemplate<T> {
             }
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -77,6 +81,7 @@ public class JdbcDaoTemplate<T> {
             setParamsToStatement(statement, params);
             statement.executeUpdate();
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -102,6 +107,7 @@ public class JdbcDaoTemplate<T> {
             return getGeneratedPrimaryKey(statement);
 
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
