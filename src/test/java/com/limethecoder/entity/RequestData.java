@@ -7,7 +7,9 @@ public enum RequestData {
     LESLEY_REQUEST_1(2, UserData.USER_LESLEY.user,
             StationData.KYIV.station, StationData.KHARKIV.station),
     JOHN_REQUEST_2(3, UserData.USER_JOHN.user,
-                   StationData.LVIV.station, StationData.ODESSA.station);
+                   StationData.LVIV.station, StationData.ODESSA.station),
+    LESLEY_REQUEST_2(4, UserData.USER_LESLEY.user,
+            StationData.LVIV.station, StationData.ODESSA.station);
 
     public final Request request;
 

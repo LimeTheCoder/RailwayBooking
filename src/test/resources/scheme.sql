@@ -143,6 +143,8 @@ INSERT INTO Requests(passenger, departure, destination, departure_time, result_c
 VALUES('test2@gmail.com', 1, 4, '2017-02-04 00:00:00', 1);
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
 VALUES('test@gmail.com', 2, 3, '2017-02-04 00:00:00', 1);
+INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
+VALUES('test2@gmail.com', 2, 3, '2017-02-04 00:00:00', 1);
 
 INSERT INTO Invoices(request, route, status) VALUES(1, 1, 'PENDING');
 INSERT INTO Invoices(request, route, status) VALUES(2, 1, 'PAID');
