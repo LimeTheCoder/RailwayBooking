@@ -2,8 +2,8 @@ package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.RequestDao;
 import com.limethecoder.dao.util.Util;
-import com.limethecoder.dao.util.converter.ReadConverter;
-import com.limethecoder.dao.util.converter.RequestReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.ReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.RequestReadConverter;
 import com.limethecoder.entity.Request;
 
 import java.sql.*;

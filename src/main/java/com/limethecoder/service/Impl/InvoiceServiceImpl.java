@@ -8,13 +8,14 @@ import com.limethecoder.entity.Invoice;
 import com.limethecoder.service.InvoiceService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class InvoiceServiceImpl implements InvoiceService {
 
     private DaoFactory daoFactory = DaoFactory.getInstance();
 
-    private InvoiceServiceImpl() {}
+    InvoiceServiceImpl() {}
 
     private static class InstanceHolder {
         private final static InvoiceService INSTANCE = new InvoiceServiceImpl();
@@ -58,6 +59,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice create(Invoice invoice) {
+        Objects.requireNonNull(invoice);
+
         try(DaoConnection connection = daoFactory.getConnection()) {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
             return invoiceDao.insert(invoice);
@@ -86,5 +89,9 @@ public class InvoiceServiceImpl implements InvoiceService {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
             invoiceDao.updateInvoiceStatus(id, Invoice.Status.PAID);
         }
+    }
+
+    void setDaoFactory(DaoFactory daoFactory) {
+        this.daoFactory = daoFactory;
     }
 }

@@ -4,7 +4,7 @@ package com.limethecoder.controller.command;
 import com.limethecoder.controller.command.admin.GetPendingInvoices;
 import com.limethecoder.controller.command.admin.PostHandleUserInvoice;
 import com.limethecoder.controller.command.authentication.*;
-import com.limethecoder.controller.command.user.invoice.CreateInvoiceCommand;
+import com.limethecoder.controller.command.user.invoice.InvoiceCreationCommand;
 import com.limethecoder.controller.command.user.invoice.GetInvoices;
 import com.limethecoder.controller.command.user.request.GetRequestForm;
 import com.limethecoder.controller.command.user.request.GetRequestsHistory;
@@ -55,7 +55,7 @@ public class CommandHolder {
         commands.put(buildKey(PagesPaths.REQUEST_INVALIDATE_PATH, Method.POST),
                 new PostInvalidateUserRequest());
         commands.put(buildKey(PagesPaths.NEW_INVOICE_PATH, Method.POST),
-                new CreateInvoiceCommand());
+                new InvoiceCreationCommand());
         commands.put(buildKey(PagesPaths.INVOICES_PATH, Method.GET),
                 new GetInvoices());
         commands.put(buildKey(PagesPaths.PENDING_INVOICES_PATH, Method.GET),

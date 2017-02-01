@@ -64,4 +64,9 @@ public class FrontController extends HttpServlet {
         String uri = request.getRequestURI();
         return uri.replaceAll(PagesPaths.SITE_PREFIX, "");
     }
+
+
+    void setCommandHolder(CommandHolder commandHolder) {
+        this.commandHolder = commandHolder;
+    }
 }

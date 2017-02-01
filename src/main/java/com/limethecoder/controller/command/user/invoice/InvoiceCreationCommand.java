@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
-public class CreateInvoiceCommand implements Command {
+public class InvoiceCreationCommand implements Command {
     private final static String ROUTE_PARAM = "route";
 
     private RouteService routeService = RouteServiceImpl.getInstance();

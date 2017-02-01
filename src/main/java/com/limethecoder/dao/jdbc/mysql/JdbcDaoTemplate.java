@@ -2,7 +2,7 @@ package com.limethecoder.dao.jdbc.mysql;
 
 
 import com.limethecoder.dao.exception.DaoException;
-import com.limethecoder.dao.util.converter.ReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.ReadConverter;
 import org.apache.log4j.Logger;
 
 import java.sql.*;

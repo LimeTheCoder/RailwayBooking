@@ -2,8 +2,8 @@ package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.RouteDao;
 import com.limethecoder.dao.util.Util;
-import com.limethecoder.dao.util.converter.ReadConverter;
-import com.limethecoder.dao.util.converter.RouteReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.ReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.RouteReadConverter;
 import com.limethecoder.entity.Route;
 import com.limethecoder.entity.Station;
 

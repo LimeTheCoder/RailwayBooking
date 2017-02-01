@@ -1,4 +1,4 @@
-package com.limethecoder.dao.util.converter;
+package com.limethecoder.dao.jdbc.mysql.converter;
 
 
 import com.limethecoder.entity.Station;

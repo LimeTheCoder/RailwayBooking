@@ -1,8 +1,8 @@
 package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.InvoiceDao;
-import com.limethecoder.dao.util.converter.InvoiceReadConverter;
-import com.limethecoder.dao.util.converter.ReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.InvoiceReadConverter;
+import com.limethecoder.dao.jdbc.mysql.converter.ReadConverter;
 import com.limethecoder.entity.Invoice;
 
 import java.sql.*;
