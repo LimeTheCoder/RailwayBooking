@@ -23,8 +23,19 @@ import java.util.Optional;
 public class InvoiceCreationCommand implements Command {
     private final static String ROUTE_PARAM = "route";
 
-    private RouteService routeService = RouteServiceImpl.getInstance();
-    private InvoiceService invoiceService = InvoiceServiceImpl.getInstance();
+    private RouteService routeService;
+    private InvoiceService invoiceService;
+
+    public InvoiceCreationCommand() {
+        invoiceService = InvoiceServiceImpl.getInstance();
+        routeService = RouteServiceImpl.getInstance();
+    }
+
+    InvoiceCreationCommand(RouteService routeService,
+                                  InvoiceService invoiceService) {
+        this.routeService = routeService;
+        this.invoiceService = invoiceService;
+    }
 
     @Override
     public String execute(HttpServletRequest httpRequest, HttpServletResponse response)

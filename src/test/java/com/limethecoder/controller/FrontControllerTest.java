@@ -67,7 +67,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void redirectToHomeWhenInvalidUri()
+    public void testRedirectionToHomeWhenInvalidUri()
             throws IOException, ServletException {
         when(request.getRequestURI()).thenReturn(INVALID_URI);
         when(request.getMethod()).thenReturn("GET");
@@ -79,7 +79,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void forwardWhenValidUrlAndMethodGet()
+    public void testForwardingWhenValidUrlAndMethodGet()
             throws IOException, ServletException {
         when(request.getRequestURI()).thenReturn(VALID_URI);
         when(request.getMethod()).thenReturn("GET");
@@ -92,7 +92,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void redirectWhenValidUrlAndMethodPost()
+    public void testRedirectionWhenValidUrlAndMethodPost()
             throws IOException, ServletException {
         when(request.getRequestURI()).thenReturn(VALID_URI);
         when(request.getMethod()).thenReturn("POST");

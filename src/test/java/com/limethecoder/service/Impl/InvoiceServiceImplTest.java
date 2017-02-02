@@ -45,14 +45,14 @@ public class InvoiceServiceImplTest {
     }
 
     @Test
-    public void rejectInvoiceTest() {
+    public void testRejectInvoice() {
         long invoiceId = 1L;
         invoiceService.rejectInvoice(invoiceId);
         verify(invoiceDao).updateInvoiceStatus(invoiceId, Invoice.Status.REJECTED);
     }
 
     @Test
-    public void submitInvoiceTest() {
+    public void testSubmitInvoice() {
         long invoiceId = 1L;
         invoiceService.submitInvoice(invoiceId);
         verify(invoiceDao).updateInvoiceStatus(invoiceId, Invoice.Status.PAID);
