@@ -8,4 +8,6 @@ public interface Attributes {
     String STATIONS_ATTR = "stations";
     String ROUTES_ATTR = "routes";
     String INVOICES_ATTR = "invoices";
+    String TRAINS_ATTR = "trains";
+    String ROUTE_ATTR = "route";
 }

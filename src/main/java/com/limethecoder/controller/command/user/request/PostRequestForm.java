@@ -37,8 +37,6 @@ public class PostRequestForm implements Command {
     private final static String ERROR_EQUAL_STATION = "error.stations.equal";
     private final static String ERROR_DATE_BEFORE_CURRENT = "error.date.before";
 
-    private final static String DATE_PATTERN = "yyyy-MM-dd";
-
     private final static String USER_REQUEST_PARAM = "request";
 
     private StationService stationService = StationServiceImpl.getInstance();
@@ -80,18 +78,8 @@ public class PostRequestForm implements Command {
         return Request.newBuilder()
                 .setDeparture(new Station(departureId))
                 .setDestination(new Station(destinationId))
-                .setDepartureTime(parseDate(departureDate))
+                .setDepartureTime(Util.parseDate(departureDate))
                 .build();
-    }
-
-    private Date parseDate(String dateInString) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
-
-        try {
-            return formatter.parse(dateInString);
-        } catch (ParseException e) {
-            return null;
-        }
     }
 
     private List<String> validateData(Request userRequest) {

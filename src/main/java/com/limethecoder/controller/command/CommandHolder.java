@@ -2,7 +2,9 @@ package com.limethecoder.controller.command;
 
 
 import com.limethecoder.controller.command.admin.GetPendingInvoices;
+import com.limethecoder.controller.command.admin.GetRouteFormCommand;
 import com.limethecoder.controller.command.admin.PostHandleUserInvoice;
+import com.limethecoder.controller.command.admin.PostRouteCreation;
 import com.limethecoder.controller.command.authentication.*;
 import com.limethecoder.controller.command.user.invoice.InvoiceCreationCommand;
 import com.limethecoder.controller.command.user.invoice.GetInvoices;
@@ -62,6 +64,10 @@ public class CommandHolder {
                 new GetPendingInvoices());
         commands.put(buildKey(PagesPaths.PENDING_INVOICES_PATH, Method.POST),
                 new PostHandleUserInvoice());
+        commands.put(buildKey(PagesPaths.ROUTE_CREATION, Method.GET),
+                new GetRouteFormCommand());
+        commands.put(buildKey(PagesPaths.ROUTE_CREATION, Method.POST),
+                new PostRouteCreation());
     }
 
     public Command getCommand(String path, Method method) {

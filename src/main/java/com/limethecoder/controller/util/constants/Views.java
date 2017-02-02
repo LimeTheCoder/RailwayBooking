@@ -11,4 +11,5 @@ public interface Views {
     String REQUESTS_HISTORY_VIEW = VIEWS_PATH + "requestHistory.jsp";
     String REQUEST_VIEW = VIEWS_PATH + "createRequest.jsp";
     String INVOICES_VIEW = VIEWS_PATH + "invoices.jsp";
+    String ROUTE_CREATION = VIEWS_PATH + "addRoute.jsp";
 }

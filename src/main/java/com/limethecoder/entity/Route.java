@@ -10,8 +10,8 @@ public class Route {
     private Date departureTime;
     private Date destinationTime;
     private Train train;
-    private int reservedCnt;
-    private int price;
+    private Integer reservedCnt;
+    private Integer price;
 
     public static class Builder {
         private final Route route = new Route();
@@ -46,12 +46,12 @@ public class Route {
             return this;
         }
 
-        public Builder setReservedCnt(int reservedCnt) {
+        public Builder setReservedCnt(Integer reservedCnt) {
             route.setReservedCnt(reservedCnt);
             return this;
         }
 
-        public Builder setPrice(int price) {
+        public Builder setPrice(Integer price) {
             route.setPrice(price);
             return this;
         }
@@ -113,23 +113,23 @@ public class Route {
         this.train = train;
     }
 
-    public int getReservedCnt() {
+    public Integer getReservedCnt() {
         return reservedCnt;
     }
 
-    public void setReservedCnt(int reservedCnt) {
+    public void setReservedCnt(Integer reservedCnt) {
         this.reservedCnt = reservedCnt;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public int getFreePlaces() {
+    public Integer getFreePlaces() {
         return train.getCapacity() - reservedCnt;
     }
 }

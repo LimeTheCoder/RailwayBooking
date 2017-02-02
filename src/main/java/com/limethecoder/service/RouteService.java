@@ -14,4 +14,5 @@ public interface RouteService {
     List<Route> findByStations(Station from, Station to);
     List<Route> findByStationsAndDate(Station from,
                                       Station to, Date after);
+    void insert(Route route);
 }

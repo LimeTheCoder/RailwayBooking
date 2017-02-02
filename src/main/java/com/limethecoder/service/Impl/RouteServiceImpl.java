@@ -56,4 +56,12 @@ public class RouteServiceImpl implements RouteService {
             return routeDao.findByStationsAndDate(from, to, after);
         }
     }
+
+    @Override
+    public void insert(Route route) {
+        try(DaoConnection connection = daoFactory.getConnection()) {
+            RouteDao routeDao = daoFactory.getRouteDao(connection);
+            routeDao.insert(route);
+        }
+    }
 }

@@ -20,4 +20,5 @@ public interface PagesPaths {
     String INVOICES_PATH = USER_PREFIX + "/invoices";
 
     String PENDING_INVOICES_PATH = ADMIN_PREFIX + "/invoices";
+    String ROUTE_CREATION = ADMIN_PREFIX + "/route/creation";
 }
