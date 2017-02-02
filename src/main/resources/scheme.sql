@@ -227,6 +227,9 @@ INSERT INTO Trains(serial_no, capacity) VALUES('M6109-21', 25);
 INSERT INTO Trains(serial_no, capacity) VALUES('S6108-19', 3);
 INSERT INTO Trains(serial_no, capacity) VALUES('M6209-19', 13);
 INSERT INTO Trains(serial_no, capacity) VALUES('L6309-50', 50);
+INSERT INTO Trains(serial_no, capacity) VALUES('K7777-50', 50);
+INSERT INTO Trains(serial_no, capacity) VALUES('K8888-10', 10);
+INSERT INTO Trains(serial_no, capacity) VALUES('K4444-33', 33);
 
 INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
 VALUES(1, 4, '2017-02-08 06:10:00', '2017-02-08 18:45:00', 'S6108-19', 500);
@@ -250,3 +253,6 @@ INSERT INTO Invoices(request, route, status) VALUES(1, 1, 'PENDING');
 INSERT INTO Invoices(request, route, status) VALUES(2, 1, 'PAID');
 INSERT INTO Invoices(request, route, status) VALUES(3, 2, 'PENDING');
 INSERT INTO Invoices(request, route, status) VALUES(4, 4, 'PENDING');
+
+ALTER TABLE Stations
+  ADD CONSTRAINT uq_stations UNIQUE(name, city, country);
