@@ -13,6 +13,7 @@
 <c:set var="loginView" scope="page" value="/WEB-INF/views/login.jsp" />
 <c:set var="signUpView" scope="page" value="/WEB-INF/views/signup.jsp" />
 <c:set var="invoicesView" scope="page" value="/WEB-INF/views/invoices.jsp" />
+<c:set var="routeCreationView" scope="page" value="/WEB-INF/views/addRoute.jsp" />
 
 <c:set var="currView" scope="page">
     <myLib:viewUri/>
@@ -98,6 +99,19 @@
                     <a href="${pageContext.request.contextPath}/site/admin/invoices">
                         <fmt:message key="menu.invoices" />
                     </a>
+                </li>
+
+                <c:choose>
+                    <c:when test="${routeCreationView.equals(currView)}">
+                        <li class="active">
+                    </c:when>
+                    <c:otherwise>
+                        <li>
+                    </c:otherwise>
+                </c:choose>
+                <a href="${pageContext.request.contextPath}/site/admin/route/creation">
+                    <fmt:message key="menu.create.route" />
+                </a>
                 </li>
             </c:if>
             <li class="dropdown">
