@@ -1,6 +1,7 @@
 package com.limethecoder.dao.connection;
 
 import com.limethecoder.dao.exception.DaoException;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,12 +17,12 @@ public class MySqlConnection implements DaoConnection {
     private static final String ERROR_DURING_CLOSE =
             "Failed to close transaction";
 
+    private static final Logger logger = Logger.getLogger(MySqlConnection.class);
+
     /** Concrete base-related connection*/
     private Connection connection;
 
-    private boolean isTransactionStarted;
-
-    private boolean isTransactionCommitted;
+    private boolean isTransactionActive;
 
     public MySqlConnection(Connection connection) {
         this.connection = connection;
@@ -32,8 +33,9 @@ public class MySqlConnection implements DaoConnection {
     public void startTransaction() {
         try {
             connection.setAutoCommit(false);
-            isTransactionStarted = true;
+            isTransactionActive = true;
         } catch (SQLException e) {
+            logger.error(ERROR_DURING_START, e);
             throw new DaoException(ERROR_DURING_START, e);
         }
     }
@@ -43,8 +45,9 @@ public class MySqlConnection implements DaoConnection {
         try {
             connection.commit();
             connection.setAutoCommit(true);
-            isTransactionCommitted = true;
+            isTransactionActive = false;
         } catch (SQLException e) {
+            logger.error(ERROR_DURING_COMMIT, e);
             throw new DaoException(ERROR_DURING_COMMIT, e);
         }
     }
@@ -52,22 +55,25 @@ public class MySqlConnection implements DaoConnection {
     @Override
     public void rollback() {
         try {
-            isTransactionCommitted = true;
             connection.rollback();
             connection.setAutoCommit(true);
+            isTransactionActive = false;
         } catch (SQLException e) {
+            logger.error(ERROR_DURING_ROLLBACK, e);
             throw new DaoException(ERROR_DURING_ROLLBACK, e);
         }
     }
 
     @Override
     public void close() {
-        try {
-            if (isTransactionStarted && !isTransactionCommitted) {
+        if (isTransactionActive) {
                 rollback();
             }
+
+        try {
             connection.close();
         } catch (SQLException e) {
+            logger.error(ERROR_DURING_CLOSE, e);
             throw new DaoException(ERROR_DURING_CLOSE, e);
         }
     }

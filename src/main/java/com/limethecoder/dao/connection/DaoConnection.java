@@ -12,7 +12,7 @@ public interface DaoConnection extends AutoCloseable {
     void startTransaction();
 
     /**
-     * Commit queries in transaction.
+     * Commit transaction.
      */
     void commit();
 
