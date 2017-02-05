@@ -1,6 +1,7 @@
 package com.limethecoder.dao.jdbc.mysql;
 
 import com.limethecoder.dao.RouteDao;
+import com.limethecoder.dao.exception.DaoException;
 import com.limethecoder.dao.util.Util;
 import com.limethecoder.dao.jdbc.mysql.converter.ReadConverter;
 import com.limethecoder.dao.jdbc.mysql.converter.RouteReadConverter;
@@ -27,6 +28,8 @@ public class MySqlRouteDao implements RouteDao {
                     "JOIN Stations AS s2 ON Routes.destination_station = s2.id " +
                     "JOIN Trains as t1 ON Routes.train = t1.serial_no";
 
+    private final static String SQL_SELECT_RESERVED = "SELECT Routes.reserved_cnt from Routes ";
+
     private final static String SQL_INSERT =
             "INSERT INTO Routes (departure_station, destination_station, " +
                     "departure_time, destination_time, train, price) " +
@@ -36,6 +39,10 @@ public class MySqlRouteDao implements RouteDao {
             "UPDATE Routes SET departure_station = ?, destination_station = ?, " +
                     "departure_time = ?, destination_time = ?, " +
                     "train = ?, price = ? ";
+    private final static String SQL_INC_RESERVED =
+            "UPDATE Routes SET Routes.reserved_cnt = Routes.reserved_cnt + 1 ";
+    private final static String SQL_DEC_RESERVED =
+            "UPDATE Routes SET Routes.reserved_cnt = Routes.reserved_cnt - 1 ";
 
     private final static String WHERE_ID = " WHERE Routes.id = ?";
     private final static String WHERE_DEP_AND_DEST_STATION_ID =
@@ -135,5 +142,34 @@ public class MySqlRouteDao implements RouteDao {
                 to.getId(),
                 Util.toTimestamp(after)
         );
+    }
+
+    @Override
+    public void incrementReservedCnt(long id) {
+        jdbcTemplate.executeUpdate(SQL_INC_RESERVED + WHERE_ID, id);
+    }
+
+    @Override
+    public void decrementReservedCnt(long id) {
+        jdbcTemplate.executeUpdate(SQL_DEC_RESERVED + WHERE_ID, id);
+    }
+
+    @Override
+    public int findReservedCnt(long id) {
+        Connection connection = jdbcTemplate.getConnection();
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_RESERVED + WHERE_ID)) {
+            statement.setLong(1, id);
+
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if(resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return 0;
     }
 }

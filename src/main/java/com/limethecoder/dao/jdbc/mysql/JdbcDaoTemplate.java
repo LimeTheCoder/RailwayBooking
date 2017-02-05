@@ -112,6 +112,10 @@ public class JdbcDaoTemplate<T> {
         }
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     /**
      * Sets all parameters to statement.
      *

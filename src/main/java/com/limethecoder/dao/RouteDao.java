@@ -11,4 +11,8 @@ public interface RouteDao extends GenericDao<Route, Long> {
     List<Route> findByStations(Station from, Station to);
     List<Route> findByStationsAndDate(Station from,
                                       Station to, Date after);
+    void incrementReservedCnt(long id);
+    void decrementReservedCnt(long id);
+
+    int findReservedCnt(long id);
 }

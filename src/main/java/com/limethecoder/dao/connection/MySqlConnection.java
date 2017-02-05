@@ -71,6 +71,7 @@ public class MySqlConnection implements DaoConnection {
             }
 
         try {
+            connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
             connection.close();
         } catch (SQLException e) {
             logger.error(ERROR_DURING_CLOSE, e);

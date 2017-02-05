@@ -113,90 +113,6 @@ CREATE TABLE Invoices(
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TRIGGER IF EXISTS inc_reserved_cnt;
-
-DELIMITER $
-
-CREATE TRIGGER inc_reserved_cnt
-	BEFORE INSERT ON Invoices FOR EACH ROW
-    BEGIN
-      DECLARE train_id VARCHAR(10);
-      DECLARE cnt INT(10);
-
-    IF NEW.status <> 'REJECTED'
-    THEN
-      SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
-      SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
-
-      IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
-      THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
-      ELSE
-        UPDATE Routes
-              SET reserved_cnt = reserved_cnt + 1
-              WHERE id = NEW.route;
-      END IF;
-		END IF;
-    END$
-
-DELIMITER ;
-
-DROP TRIGGER IF EXISTS dec_reserved_cnt;
-
-DELIMITER $
-
-CREATE TRIGGER dec_reserved_cnt
-	BEFORE DELETE ON Invoices FOR EACH ROW
-    BEGIN
-    IF OLD.status <> 'REJECTED'
-    THEN
-      UPDATE Routes
-      SET reserved_cnt = reserved_cnt - 1
-      WHERE id = OLD.route;
-    END IF;
-
-  END$
-
-DELIMITER ;
-
-DROP TRIGGER IF EXISTS update_reserved_cnt;
-
-DELIMITER $
-
-CREATE TRIGGER update_reserved_cnt
-	BEFORE UPDATE ON Invoices FOR EACH ROW
-    BEGIN
-      DECLARE train_id VARCHAR(10);
-      DECLARE cnt INT(10);
-
-    IF OLD.status = 'REJECTED' and NEW.status <> 'REJECTED'
-    THEN
-      SET train_id = (SELECT train FROM Routes WHERE id = NEW.route);
-      SET cnt = (SELECT reserved_cnt FROM Routes WHERE id = NEW.route);
-
-      IF cnt + 1 > (SELECT capacity from Trains WHERE serial_no = train_id)
-      THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 'Cannot insert new row: all places already reserved';
-      ELSE
-        UPDATE Routes
-              SET reserved_cnt = reserved_cnt + 1
-              WHERE id = NEW.route;
-      END IF;
-
-    END IF;
-
-    IF OLD.status <> 'REJECTED' and NEW.status = 'REJECTED'
-      THEN
-        UPDATE Routes
-        SET reserved_cnt = reserved_cnt - 1
-        WHERE id = OLD.route;
-      END IF;
-  END$
-
-DELIMITER ;
-
 INSERT INTO Users(email, password, name, surname, phone, role) 
 	VALUES('test@gmail.com', '$2a$10$.jtJduq/M3xeePiuWUhytOCH4u6WYZiLKJnVBWNpPQa4SGHjck8bC',
 	'John', 'Smitt', '380562517296', 'USER');
@@ -231,14 +147,14 @@ INSERT INTO Trains(serial_no, capacity) VALUES('K7777-50', 50);
 INSERT INTO Trains(serial_no, capacity) VALUES('K8888-10', 10);
 INSERT INTO Trains(serial_no, capacity) VALUES('K4444-33', 33);
 
-INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(1, 4, '2017-02-08 06:10:00', '2017-02-08 18:45:00', 'S6108-19', 500);
-INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(3, 6, '2017-02-04 16:15:00', '2017-02-04 23:40:00', 'M6109-21', 125);
-INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(1, 4, '2017-02-05 12:30:00', '2017-02-05 20:50:00', 'M6209-19', 250);
-INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price)
-VALUES(5, 8, '2017-02-04 13:10:00', '2017-02-04 18:20:00', 'L6309-50', 90);
+INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price, reserved_cnt)
+VALUES(1, 4, '2017-02-08 06:10:00', '2017-02-08 18:45:00', 'S6108-19', 500, 2);
+INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price, reserved_cnt)
+VALUES(3, 6, '2017-02-04 16:15:00', '2017-02-04 23:40:00', 'M6109-21', 125, 1);
+INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price, reserved_cnt)
+VALUES(1, 4, '2017-02-05 12:30:00', '2017-02-05 20:50:00', 'M6209-19', 250, 0);
+INSERT INTO Routes(departure_station, destination_station, departure_time, destination_time, train, price, reserved_cnt)
+VALUES(5, 8, '2017-02-04 13:10:00', '2017-02-04 18:20:00', 'L6309-50', 90, 1);
 
 INSERT INTO Requests(passenger, departure, destination, departure_time, result_cnt)
 VALUES('test@gmail.com', 1, 4, '2017-02-06 00:00:00', 1);
