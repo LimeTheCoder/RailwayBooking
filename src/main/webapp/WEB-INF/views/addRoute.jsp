@@ -100,7 +100,7 @@
                             <span class="input-group-addon"><i class="fa fa-calendar fa" aria-hidden="true"></i></span>
                             <input type="datetime-local" class="form-control" name="dep_date" id="dep_date"
                                    placeholder="<fmt:message key="request.enter.dep.date" />"
-                                   value="${requestScope.route.getDepartureTime()}" />
+                                   value="<c:out value="${requestScope.route.getDepartureTime()}" />" />
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                             <span class="input-group-addon"><i class="fa fa-calendar fa" aria-hidden="true"></i></span>
                             <input type="datetime-local" class="form-control" name="dest_date" id="dest_date"
                                    placeholder="<fmt:message key="route.enter.dest.date" />"
-                                   value="${requestScope.route.getDestinationTime()}" />
+                                   value="<c:out value="${requestScope.route.getDestinationTime()}" />" />
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                             <span class="input-group-addon"><i class="fa fa-money fa" aria-hidden="true"></i></span>
                             <input type="number" min="0" class="form-control" name="price" id="price"
                                    placeholder="<fmt:message key="route.enter.price" />"
-                                   value="${requestScope.route.getPrice()}" />
+                                   value="<c:out value="${requestScope.route.getPrice()}" />" />
                         </div>
                     </div>
                 </div>

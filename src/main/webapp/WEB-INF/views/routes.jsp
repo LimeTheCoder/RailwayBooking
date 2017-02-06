@@ -38,11 +38,11 @@
                                 <tbody>
                                 <tr>
                                     <td><fmt:message key="request.from" /></td>
-                                    <td>${sessionScope.user_request.getDeparture()}</td>
+                                    <td><c:out value="${sessionScope.user_request.getDeparture()}" /></td>
                                 </tr>
                                 <tr>
                                     <td><fmt:message key="request.to" /></td>
-                                    <td>${sessionScope.user_request.getDestination()}</td>
+                                    <td><c:out value="${sessionScope.user_request.getDestination()}" /></td>
                                 </tr>
                                 <tr>
                                     <td><fmt:message key="request.departure.date" /></td>
@@ -93,15 +93,15 @@
                 <c:forEach var="route" items="${requestScope.routes}">
                     <c:if test="${empty sessionScope.user_request or route.getFreePlaces() != 0}">
                         <tr>
-                            <td>${route.getTrain()}</td>
-                            <td>${route.getDeparture()}</td>
-                            <td>${route.getDestination()}</td>
+                            <td><c:out value="${route.getTrain()}" /></td>
+                            <td><c:out value="${route.getDeparture()}" /></td>
+                            <td><c:out value="${route.getDestination()}" /></td>
                             <td><fmt:formatDate type="date" dateStyle="long"
                                                 value="${route.getDepartureTime()}"/></td>
                             <td><fmt:formatDate type="time" dateStyle="medium"
                                                 value="${route.getDepartureTime()}"/></td>
-                            <td>${route.getPrice()}$</td>
-                            <td>${route.getFreePlaces()}</td>
+                            <td><c:out value="${route.getPrice()}$" /></td>
+                            <td><c:out value="${route.getFreePlaces()}" /></td>
                             <c:if test="${not empty sessionScope.user_request}">
                                 <td>
                                 <form action="${pageContext.request.contextPath}/site/user/invoices/new" method="POST">
@@ -109,7 +109,6 @@
                                     <button type="submit" class='btn btn-info btn-xs'>
                                         <span class="glyphicon glyphicon-plane"></span><fmt:message key="route.reserve" />
                                     </button>
-
                                 </form>
                                 </td>
                             </c:if>

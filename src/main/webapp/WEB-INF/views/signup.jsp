@@ -41,7 +41,7 @@
                                 <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="email" id="email"
                                        placeholder="<fmt:message key="enter.email" />"
-                                       value="${requestScope.user.getEmail()}" />
+                                       value="<c:out value="${requestScope.user.getEmail()}" />" />
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                                 <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="name" id="name"
                                        placeholder="<fmt:message key="enter.name" />"
-                                       value="${requestScope.user.getName()}" />
+                                       value="<c:out value="${requestScope.user.getName()}" />" />
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                                 <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="surname" id="surname"
                                        placeholder="<fmt:message key="enter.surname" />"
-                                       value="${requestScope.user.getSurname()}" />
+                                       value="<c:out value="${requestScope.user.getSurname()}" />" />
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                                 <span class="input-group-addon"><i class="fa fa-phone fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="phone" id="phone"
                                        placeholder="<fmt:message key="enter.phone" />"
-                                       value="${requestScope.user.getPhone()}" />
+                                       value="<c:out value="${requestScope.user.getPhone()}" />" />
                             </div>
                         </div>
                     </div>

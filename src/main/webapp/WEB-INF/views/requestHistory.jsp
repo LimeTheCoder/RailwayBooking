@@ -53,11 +53,11 @@
                 <tr>
                     <td><fmt:formatDate type="both" dateStyle="medium"
                                         value="${request.getCreationTime()}"/></td>
-                    <td>${request.getDeparture()}</td>
-                    <td>${request.getDestination()}</td>
+                    <td><c:out value="${request.getDeparture()}" /></td>
+                    <td><c:out value="${request.getDestination()}" /></td>
                     <td><fmt:formatDate type="date" dateStyle="long"
                                         value="${request.getDepartureTime()}"/></td>
-                    <td>${request.getResultCnt()}</td>
+                    <td><c:out value="${request.getResultCnt()}" /></td>
                 </tr>
             </c:forEach>
             </tbody>

@@ -38,7 +38,7 @@
                                 <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control" name="email" id="email"
                                        placeholder="<fmt:message key="enter.email" />"
-                                       value="${requestScope.user.getEmail()}"/>
+                                       value="<c:out value="${requestScope.user.getEmail()}" />" />
                             </div>
                         </div>
                     </div>
