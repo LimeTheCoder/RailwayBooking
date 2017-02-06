@@ -1,45 +1,34 @@
-# RailwayBooking
+# Railway booking system
+## Short description
+Passenger creates a request for a ticket to some station. In the request, he specifies desired departure station, desired destination, desired time and date of departure. The system performs searching routes, that match user request. Passenger chooses route from that list and receives a bill for paying. Administrator changes status of passengers bills to 'paid' or 'rejected'.
 
-### Система Железнодорожная касса. 
-<b>Пассажир</b> делает <b>Заявку</b> на билет до необходимой ему станции назначения, 
-время и дату поездки. 
-Система осуществляет поиск подходящего <b>Поезда</b>. 
-Пассажир делает выбор <b>Поезда</b> и получает <b>Счет</b> на оплату. 
-Администратор управляет списком зарегистрированных пассажиров.
+## Design patterns in project
+* Front controller
+* Builder
+* Factory method
+* Command
+* Singleton
+* Facade
+* Model-View-Controller
 
-### Требования
+## Used technologies
+* Java Servlets
+* JSP
+* JSTL tags
+* JDBC API
+* MySQL
+* Tomcat
+* Maven
+* Bootstrap
+* JUnit
+* Mockito
 
-* На основе сущностей предметной области создать классы их описывающие.
+## Screens
 
-* Классы и методы должны иметь отражающую их функциональность
-названия и должны быть грамотно структурированы по пакетам.
+### User chooses route from results of his request
 
-* Оформление кода должно соответствовать Java Code Convention.
+![screen](../master/screens/user_request.png)
 
-* Информацию о предметной области хранить в БД, для доступа
-использовать API JDBC с использованием пула соединений,
-стандартного или разработанного самостоятельно. 
-В качестве СУБД рекомендуется MySQL или Derby.
+### Admin changes status of passenger invoices
 
-* Приложение должно поддерживать работу с кириллицей (быть
-многоязычной), в том числе и при хранении информации в БД.
-
-* Архитектура приложения должна соответствовать шаблону Model-View-
-Controller.
-
-* При реализации алгоритмов бизнес-логики использовать шаблоны GoF:
-Factory Method, Command, Builder, Strategy, State, Observer etc.
-
-* Используя сервлеты и JSP, реализовать функциональности,
-предложенные в постановке конкретной задачи.
-
-* В страницах JSP применять библиотеку JSTL и разработать собственные
-теги.
-
-* При разработке бизнес логики использовать сессии и фильтры.
-
-* Выполнить журналирование событий, то есть информацию о
-возникающих исключениях и событиях в системе обрабатывать с
-помощью Log4j.
-
-* Код должен содержать комментарии.
+![screen](../master/screens/user_request.png)
