@@ -35,20 +35,22 @@ public class FrontController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        processRequest(request, response);
+        processRequest(request, response, Method.GET);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        processRequest(request, response);
+        processRequest(request, response, Method.POST);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response )
+    private void processRequest(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Method method)
             throws ServletException, IOException {
         Command command = commandHolder.getCommand(getPath(request),
-                getMethod(request));
+                method);
 
         String path = command.execute(request, response);
         if(!path.equals(Command.REDIRECTED)) {
@@ -56,15 +58,10 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private Method getMethod(HttpServletRequest request) {
-        return Method.valueOf(request.getMethod());
-    }
-
     private String getPath(HttpServletRequest request) {
         String uri = request.getRequestURI();
         return uri.replaceAll(PagesPaths.SITE_PREFIX, "");
     }
-
 
     void setCommandHolder(CommandHolder commandHolder) {
         this.commandHolder = commandHolder;

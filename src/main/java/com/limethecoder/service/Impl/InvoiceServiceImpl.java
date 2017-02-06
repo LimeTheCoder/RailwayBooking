@@ -71,7 +71,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
             RouteDao routeDao = daoFactory.getRouteDao(connection);
 
-            connection.startTransaction();
+            connection.startSerializableTransaction();
 
             int reservedCnt = routeDao.findReservedCnt(invoice.getRoute().getId());
             int totalCapacity = invoice.getRoute().getTrain().getCapacity();
@@ -95,7 +95,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         try(DaoConnection connection = daoFactory.getConnection()) {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
 
-            connection.startTransaction();
+            connection.startSerializableTransaction();
 
             Invoice old = invoiceDao.findOne(id)
                     .orElseThrow(() -> new ServiceException(INVALID_ID));
@@ -113,7 +113,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         try(DaoConnection connection = daoFactory.getConnection()) {
             InvoiceDao invoiceDao = daoFactory.getInvoiceDao(connection);
 
-            connection.startTransaction();
+            connection.startSerializableTransaction();
 
             Invoice old = invoiceDao.findOne(id)
                     .orElseThrow(() -> new ServiceException(INVALID_ID));

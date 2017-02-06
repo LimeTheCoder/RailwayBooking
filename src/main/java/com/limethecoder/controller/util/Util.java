@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Util {
-    private final static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm";
 
     public static boolean isAlreadyLoggedIn(HttpSession session) {
         return session.getAttribute(Attributes.USER_ATTR) != null;
@@ -51,8 +50,8 @@ public class Util {
         }
     }
 
-    public static Date parseDate(String dateInString) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+    public static Date parseDate(String dateInString, String pattern) {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 
         try {
             return formatter.parse(dateInString);

@@ -6,19 +6,16 @@ package com.limethecoder.dao.connection;
  * @author Taras Sakharchuk
  */
 public interface DaoConnection extends AutoCloseable {
-    /**
-     * Begins database transaction.
-     */
+    /** Begins database transaction. */
     void startTransaction();
 
-    /**
-     * Commit transaction.
-     */
+    /** Begins database transaction with serializable isolation level. */
+    void startSerializableTransaction();
+
+    /** Commit transaction. */
     void commit();
 
-    /**
-     * Rollback transaction in case when something goes wrong.
-     */
+    /** Rollback transaction in case when something goes wrong. */
     void rollback();
 
     /**

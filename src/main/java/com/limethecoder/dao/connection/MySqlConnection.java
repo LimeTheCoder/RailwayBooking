@@ -41,6 +41,21 @@ public class MySqlConnection implements DaoConnection {
     }
 
     @Override
+    public void startSerializableTransaction() {
+        startTransactionWithIsolationLevel(Connection.TRANSACTION_SERIALIZABLE);
+    }
+
+    private void startTransactionWithIsolationLevel(int transactionIsolationLevel) {
+        try {
+            connection.setTransactionIsolation(transactionIsolationLevel);
+            connection.setAutoCommit(false);
+            isTransactionActive = true;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
     public void commit() {
         try {
             connection.commit();

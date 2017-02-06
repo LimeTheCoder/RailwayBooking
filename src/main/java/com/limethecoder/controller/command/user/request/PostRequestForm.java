@@ -39,6 +39,8 @@ public class PostRequestForm implements Command {
 
     private final static String USER_REQUEST_PARAM = "request";
 
+    private final static String DATE_PATTERN = "yyyy-MM-dd";
+
     private StationService stationService = StationServiceImpl.getInstance();
     private RouteService routeService = RouteServiceImpl.getInstance();
     private RequestService requestService = RequestServiceImpl.getInstance();
@@ -78,7 +80,7 @@ public class PostRequestForm implements Command {
         return Request.newBuilder()
                 .setDeparture(new Station(departureId))
                 .setDestination(new Station(destinationId))
-                .setDepartureTime(Util.parseDate(departureDate))
+                .setDepartureTime(Util.parseDate(departureDate, DATE_PATTERN))
                 .build();
     }
 
@@ -95,7 +97,8 @@ public class PostRequestForm implements Command {
 
         Date current = new Date();
 
-        if(userRequest.getDepartureTime().before(current)) {
+        if(userRequest.getDepartureTime() != null &&
+                userRequest.getDepartureTime().before(current)) {
             errors.add(ERROR_DATE_BEFORE_CURRENT);
         }
 

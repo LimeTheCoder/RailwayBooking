@@ -41,6 +41,8 @@ public class PostRouteCreation implements Command {
     private final static String ERROR_TRAIN_IN_USE = "error.train";
     private final static String INVALID_DATE_RANGE = "invalid.date.range";
 
+    private final static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm";
+
     private StationService stationService = StationServiceImpl.getInstance();
     private TrainService trainService = TrainServiceImpl.getInstance();
     private RouteService routeService = RouteServiceImpl.getInstance();
@@ -79,8 +81,8 @@ public class PostRouteCreation implements Command {
                 .setDeparture(new Station(departureId))
                 .setDestination(new Station(destinationId))
                 .setTrain(new Train(trainNo))
-                .setDepartureTime(Util.parseDate(departureDate))
-                .setDestinationTime(Util.parseDate(destinationDate))
+                .setDepartureTime(Util.parseDate(departureDate, DATE_PATTERN))
+                .setDestinationTime(Util.parseDate(destinationDate, DATE_PATTERN))
                 .setPrice(price)
                 .setReservedCnt(0)
                 .build();
