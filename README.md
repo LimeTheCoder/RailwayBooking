@@ -29,6 +29,8 @@ Passenger creates a request for a ticket to some station. In the request, he spe
 
 ![screen](../master/screens/user_request.png)
 
+
 ### Admin changes status of passenger invoices
 
-![screen](../master/screens/user_request.png)
+
+![screen](../master/screens/invoices.png)
